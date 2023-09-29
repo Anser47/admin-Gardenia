@@ -1,7 +1,7 @@
-import 'package:admin_gardenia/view/add_products/add_products.dart';
-import 'package:admin_gardenia/view/earnings/earnings.dart';
-import 'package:admin_gardenia/view/orders/orders.dart';
-import 'package:admin_gardenia/view/total_stocks.dart/total_stocks.dart';
+import 'package:admin_gardenia/screens/add_products/add_products.dart';
+import 'package:admin_gardenia/screens/earnings/earnings.dart';
+import 'package:admin_gardenia/screens/orders/orders.dart';
+import 'package:admin_gardenia/screens/total_stocks.dart/total_stocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 

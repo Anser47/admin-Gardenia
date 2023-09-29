@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:admin_gardenia/bloc/product_bloc/add_product_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -20,6 +21,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
   int? _price;
   int? _quantity;
   String _description = '';
+
+  List getDetailsList() {
+    return [_productname, _price, _quantity, _description];
+  }
+
   Future<void> initializeFirebase() async {
     await Firebase.initializeApp();
   }
@@ -42,6 +48,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   Future<void> uploadImageToFirebase() async {
+    final _validate = _form.currentState!.validate();
+    if (!_validate) {
+      return;
+    }
+    _form.currentState!.save();
+    List details = getDetailsList();
     if (pickedImageFile == null) {
       return;
     }
@@ -68,6 +80,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         ),
       );
     } on FirebaseException catch (error) {
+      ScaffoldMessenger.of(context).clearSnackBars();
       // Handle errors during the upload process
       print('Error uploading image: $error');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -97,27 +110,34 @@ class _AddProductScreenState extends State<AddProductScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                GestureDetector(
-                  onTap: takeImg,
-                  child: Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: pickedImageFile != null
-                        ? Image.file(
-                            pickedImageFile!,
-                            fit: BoxFit.cover,
-                          )
-                        : Center(
-                            child: Icon(
-                              Icons.add_a_photo,
-                              size: 40,
-                              color: Colors.grey[500],
-                            ),
-                          ),
-                  ),
+                BlocBuilder<AddProductBloc, AddProductState>(
+                  builder: (context, state) {
+                    return GestureDetector(
+                      onTap: () {
+                        BlocProvider.of<AddProductBloc>(context)
+                            .add(AddImageEvent());
+                      },
+                      child: Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: pickedImageFile != null
+                            ? Image.file(
+                                pickedImageFile!,
+                                fit: BoxFit.cover,
+                              )
+                            : Center(
+                                child: Icon(
+                                  Icons.add_a_photo,
+                                  size: 40,
+                                  color: Colors.grey[500],
+                                ),
+                              ),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
@@ -144,7 +164,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter quantity';
+                      return 'Please enter price';
                     }
 
                     return null;
@@ -157,7 +177,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'Category',
+                  'Select Category',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
                 DropdownButton<String>(

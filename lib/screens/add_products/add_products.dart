@@ -1,5 +1,5 @@
-import 'package:admin_gardenia/view/add_products/adding_screen.dart';
-import 'package:admin_gardenia/view/home/home.dart';
+import 'package:admin_gardenia/screens/add_products/adding_screen.dart';
+import 'package:admin_gardenia/screens/home/home.dart';
 import 'package:flutter/material.dart';
 
 class ScreenAddProduct extends StatelessWidget {
