@@ -21,7 +21,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
   int? _price;
   int? _quantity;
   String _description = '';
-
+  final name = TextEditingController();
+  final age = TextEditingController();
+  final place = TextEditingController();
+  final nameFormKey = GlobalKey<FormState>();
+  final ageFormKey = GlobalKey<FormState>();
+  final placeFormKey = GlobalKey<FormState>();
   List getDetailsList() {
     return [_productname, _price, _quantity, _description];
   }
