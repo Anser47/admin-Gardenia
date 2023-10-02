@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:admin_gardenia/models/product_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:admin_gardenia/bloc/product_bloc/add_product_bloc.dart';
 import 'package:flutter/material.dart';
@@ -17,19 +18,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _form = GlobalKey<FormState>();
   File? pickedImageFile;
   String dropdownValue = 'Indoor';
-  String _productname = '';
-  int? _price;
-  int? _quantity;
-  String _description = '';
-  final name = TextEditingController();
-  final age = TextEditingController();
-  final place = TextEditingController();
-  final nameFormKey = GlobalKey<FormState>();
-  final ageFormKey = GlobalKey<FormState>();
-  final placeFormKey = GlobalKey<FormState>();
-  List getDetailsList() {
-    return [_productname, _price, _quantity, _description];
-  }
+  final productModel = ProductClass();
+  final _priceControllor = TextEditingController();
+
+  final _nameControllor = TextEditingController();
+
+  final _quantityControllor = TextEditingController();
+
+  final _discriptionControllor = TextEditingController();
+
+  // List getDetailsList() {
+  //   return [_productname, _price, _quantity, _description];
+  // }
 
   Future<void> initializeFirebase() async {
     await Firebase.initializeApp();
@@ -58,7 +58,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       return;
     }
     _form.currentState!.save();
-    List details = getDetailsList();
+    // List details = getDetailsList();/
     if (pickedImageFile == null) {
       return;
     }
@@ -146,6 +146,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
+                  controller: _nameControllor,
                   decoration: const InputDecoration(
                     labelText: 'Product Name',
                     border: OutlineInputBorder(),
@@ -156,12 +157,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     }
                     return null;
                   },
-                  onSaved: (newValue) {
-                    _productname = newValue!;
-                  },
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
+                  controller: _priceControllor,
                   decoration: const InputDecoration(
                     labelText: 'Price (\$)',
                     border: OutlineInputBorder(),
@@ -173,11 +172,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     }
 
                     return null;
-                  },
-                  onSaved: (newValue) {
-                    if (newValue != null) {
-                      _quantity = int.parse(newValue);
-                    }
                   },
                 ),
                 const SizedBox(height: 12),
@@ -214,6 +208,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
+                  controller: _quantityControllor,
                   decoration: const InputDecoration(
                     labelText: 'Quantity',
                     border: OutlineInputBorder(),
@@ -225,15 +220,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     }
                     return null;
                   },
-                  onSaved: (newValue) {
-                    if (newValue != null) {
-                      _quantity = int.parse(newValue);
-                    }
-                  },
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
-                  maxLines: 3,
+                  controller: _discriptionControllor,
+                  maxLines: 4,
                   decoration: const InputDecoration(
                     labelText: 'Description',
                     border: OutlineInputBorder(),
@@ -244,13 +235,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     }
                     return null;
                   },
-                  onSaved: (newValue) {
-                    _description = newValue!;
-                  },
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: uploadImageToFirebase,
+                  onPressed: () {
+                    if (_form.currentState!.validate()) {
+                      productModel.description =
+                          _discriptionControllor.text.trim();
+                      productModel.quantity = _quantityControllor.text.trim();
+                      productModel.price = _priceControllor.text.trim();
+                      productModel.productname = _nameControllor.text.trim();
+                      BlocProvider.of<AddProductBloc>(context).add(
+                        FirebaseAddEvent(
+                            context: context, product: productModel),
+                      );
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     padding: const EdgeInsets.all(16),
