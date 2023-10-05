@@ -5,4 +5,5 @@ class ProductClass {
   String? price;
   String? quantity;
   String? description;
+  String? dropdownValue;
 }

@@ -6,3 +6,5 @@ class AddImageState extends AddProductState {
   File imagestate;
   AddImageState({required this.imagestate});
 }
+
+class AddProductDataState extends AddProductEvent {}

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:admin_gardenia/models/product_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:admin_gardenia/bloc/product_bloc/add_product_bloc.dart';
 import 'package:flutter/material.dart';
@@ -238,17 +239,30 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_form.currentState!.validate()) {
                       productModel.description =
                           _discriptionControllor.text.trim();
                       productModel.quantity = _quantityControllor.text.trim();
                       productModel.price = _priceControllor.text.trim();
                       productModel.productname = _nameControllor.text.trim();
-                      BlocProvider.of<AddProductBloc>(context).add(
-                        FirebaseAddEvent(
-                            context: context, product: productModel),
-                      );
+                      productModel.dropdownValue = dropdownValue;
+                      // BlocProvider.of<AddProductBloc>(context).add(
+                      //   FirebaseAddEvent(
+                      //       context: context, product: productModel),
+                      // );
+                      // print('triggerd');
+
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc('Product List')
+                          .set({
+                        'name': productModel.productname,
+                        'price': productModel.price,
+                        'quantity': productModel.quantity,
+                        'description': productModel.description,
+                        'category': productModel.dropdownValue,
+                      });
                     }
                   },
                   style: ElevatedButton.styleFrom(
