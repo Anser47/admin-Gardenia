@@ -7,4 +7,7 @@ class AddImageState extends AddProductState {
   AddImageState({required this.imagestate});
 }
 
-class AddProductDataState extends AddProductEvent {}
+class AddProductDataState extends AddProductEvent {
+  ProductClass productStateObj;
+  AddProductDataState({required this.productStateObj});
+}

@@ -1,3 +1,5 @@
+import 'package:admin_gardenia/data/fetch_product.dart';
+import 'package:admin_gardenia/sample.dart';
 import 'package:admin_gardenia/screens/add_products/add_products.dart';
 import 'package:admin_gardenia/screens/auth/auth.dart';
 import 'package:admin_gardenia/screens/earnings/earnings.dart';
@@ -72,8 +74,10 @@ class HomeScreen extends StatelessWidget {
                         cardHeight: cardHeight,
                         name: _screenName[index],
                         navigator: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => _screens[index]));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => _screens[index]),
+                          );
                         },
                       );
                     },
@@ -101,6 +105,7 @@ class AdminCard extends StatelessWidget {
   final String name;
   @override
   Widget build(BuildContext context) {
+    getData();
     return GestureDetector(
       onTap: navigator,
       child: Card(

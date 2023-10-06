@@ -1,11 +1,8 @@
 import 'dart:io';
 import 'package:admin_gardenia/models/product_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:admin_gardenia/bloc/product_bloc/add_product_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_core/firebase_core.dart';
 
 class AddProductScreen extends StatefulWidget {
@@ -19,19 +16,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _form = GlobalKey<FormState>();
   File? pickedImageFile;
   String dropdownValue = 'Indoor';
-  final productModel = ProductClass();
   final _priceControllor = TextEditingController();
-
   final _nameControllor = TextEditingController();
-
   final _quantityControllor = TextEditingController();
-
   final _discriptionControllor = TextEditingController();
-
-  // List getDetailsList() {
-  //   return [_productname, _price, _quantity, _description];
-  // }
-
+  String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+  late File? path;
   Future<void> initializeFirebase() async {
     await Firebase.initializeApp();
   }
@@ -42,60 +32,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
     initializeFirebase();
   }
 
-  void takeImg() async {
-    final pickedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedImage == null) {
-      return;
-    }
-    setState(() {
-      pickedImageFile = File(pickedImage.path);
-    });
-  }
-
-  Future<void> uploadImageToFirebase() async {
-    final _validate = _form.currentState!.validate();
-    if (!_validate) {
-      return;
-    }
-    _form.currentState!.save();
-    // List details = getDetailsList();/
-    if (pickedImageFile == null) {
-      return;
-    }
-
-    try {
-      // Get a reference to the storage service
-      firebase_storage.Reference storageReference =
-          firebase_storage.FirebaseStorage.instance.ref().child(
-                'product_images/${DateTime.now().millisecondsSinceEpoch}.jpg',
-              );
-
-      // Upload the file to Firebase Storage
-      await storageReference.putFile(pickedImageFile!);
-
-      // Get the download URL of the uploaded image
-      String downloadURL = await storageReference.getDownloadURL();
-
-      // TODO: Use downloadURL as needed (e.g., save it to a database)
-
-      // Optional: Display a success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Image uploaded successfully!'),
-        ),
-      );
-    } on FirebaseException catch (error) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      // Handle errors during the upload process
-      print('Error uploading image: $error');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error uploading image. Please try again.'),
-        ),
-      );
-    }
-  }
+  // void takeImg() async {
+  //   final pickedImage =
+  //       await ImagePicker().pickImage(source: ImageSource.gallery);
+  //   if (pickedImage == null) {
+  //     return;
+  //   }
+  //   setState(() {
+  //     pickedImageFile = File(pickedImage.path);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -129,18 +75,25 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(12.0),
                         ),
-                        child: pickedImageFile != null
-                            ? Image.file(
-                                pickedImageFile!,
+                        child: BlocBuilder<AddProductBloc, AddProductState>(
+                          builder: (context, state) {
+                            if (state is AddImageState) {
+                              path = state.imagestate;
+                              return Image.file(
+                                state.imagestate,
                                 fit: BoxFit.cover,
-                              )
-                            : Center(
+                              );
+                            } else {
+                              return Center(
                                 child: Icon(
                                   Icons.add_a_photo,
                                   size: 40,
                                   color: Colors.grey[500],
                                 ),
-                              ),
+                              );
+                            }
+                          },
+                        ),
                       ),
                     );
                   },
@@ -163,7 +116,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 TextFormField(
                   controller: _priceControllor,
                   decoration: const InputDecoration(
-                    labelText: 'Price (\$)',
+                    labelText: 'Price (₹)',
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,
@@ -241,29 +194,30 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_form.currentState!.validate()) {
-                      productModel.description =
-                          _discriptionControllor.text.trim();
-                      productModel.quantity = _quantityControllor.text.trim();
-                      productModel.price = _priceControllor.text.trim();
-                      productModel.productname = _nameControllor.text.trim();
-                      productModel.dropdownValue = dropdownValue;
-                      // BlocProvider.of<AddProductBloc>(context).add(
-                      //   FirebaseAddEvent(
-                      //       context: context, product: productModel),
-                      // );
-                      // print('triggerd');
-
-                      await FirebaseFirestore.instance
-                          .collection('users')
-                          .doc('Product List')
-                          .set({
-                        'name': productModel.productname,
-                        'price': productModel.price,
-                        'quantity': productModel.quantity,
-                        'description': productModel.description,
-                        'category': productModel.dropdownValue,
-                      });
+                      _form.currentState!.save();
+                      final productModel = ProductClass(
+                        description: _discriptionControllor.text.trim(),
+                        category: dropdownValue,
+                        price: _priceControllor.text.trim(),
+                        name: _nameControllor.text.trim(),
+                        quantity: _quantityControllor.text.trim(),
+                      );
+                      // productModel.description =
+                      //     _discriptionControllor.text.trim();
+                      // productModel.quantity = ;
+                      // productModel.price = ;
+                      // productModel.productname = ;
+                      // productModel.dropdownValue = ;
+                      BlocProvider.of<AddProductBloc>(context).add(
+                        FirebaseAddEvent(
+                            uniqueFileName: uniqueFileName,
+                            imageFile: path!,
+                            context: context,
+                            product: productModel),
+                      );
+                      print('triggerd');
                     }
+                    return;
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,

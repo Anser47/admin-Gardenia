@@ -1,5 +1,9 @@
+import 'package:admin_gardenia/data/fetch_product.dart';
+import 'package:admin_gardenia/models/product_model.dart';
 import 'package:admin_gardenia/screens/add_products/adding_screen.dart';
 import 'package:admin_gardenia/screens/home/home.dart';
+import 'package:admin_gardenia/widget/shimmer_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ScreenAddProduct extends StatelessWidget {
@@ -31,7 +35,20 @@ class ScreenAddProduct extends StatelessWidget {
           centerTitle: true,
           actions: [
             IconButton(
-              onPressed: () {
+              onPressed: () async {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ProductListScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.ac_unit_outlined,
+                color: Colors.black,
+              ),
+            ),
+            IconButton(
+              onPressed: () async {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => AddProductScreen(),
@@ -47,32 +64,57 @@ class ScreenAddProduct extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: Container(
-            decoration: const BoxDecoration(gradient: gcolor),
+            decoration: BoxDecoration(gradient: gcolor),
             child: Column(
               children: [
                 const SizedBox(
                   height: 50,
                 ),
                 Center(
-                  child: ListView.separated(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 4,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return AddProductCard(
-                        delete: () {},
-                        edit: () {},
-                        img: Image.network(''),
-                        name: 'Peace lily',
+                  child: FutureBuilder<List<ProductClass>>(
+                    future: fetchProducts(),
+                    builder: (context, snapshot) {
+                      if (snapshot.data == null) {
+                      } else if (snapshot.hasError) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasData) {
+                        print('--------------------${snapshot.data!.length}');
+                        return ListView.separated(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: snapshot.data!.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return AddProductCard(
+                              delete: () {},
+                              edit: () {},
+                              img: snapshot.data![index].imageUrl ??
+                                  'https://plugins.jetbrains.com/files/12562/386947/icon/pluginIcon.png',
+                              name: snapshot.data![index].name ?? 'hello',
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return const SizedBox(
+                              height: 25,
+                            );
+                          },
+                        );
+                      }
+                      return Center(
+                        child: Text('no data'),
                       );
-                    },
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(
-                        height: 25,
-                      );
+                      //  else if (snapshot.connectionState ==
+                      //     ConnectionState.waiting) {
+                      //   return const HomeProductShimmerEffect();
+                      // }
+                      // return const HomeProductShimmerEffect();
                     },
                   ),
                 ),
+                const SizedBox(
+                  height: 50,
+                )
               ],
             ),
           ),
@@ -90,7 +132,7 @@ class AddProductCard extends StatelessWidget {
       required this.delete,
       required this.edit});
   final String name;
-  final Image img;
+  final String img;
   VoidCallback edit;
   VoidCallback delete;
   @override
@@ -103,7 +145,7 @@ class AddProductCard extends StatelessWidget {
           width: 340,
           decoration: const BoxDecoration(color: Colors.amber),
           child: Image.network(
-            'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.OaSiQ8I9ONIpL9Vbe-T2_gHaE8%26pid%3DApi&f=1&ipt=284fd452abd88ab83e557f9223f7e4295885fccc3a95df40bc098baee9b3d09c&ipo=images',
+            img,
             fit: BoxFit.cover,
           ),
         ),
@@ -137,5 +179,19 @@ class AddProductCard extends StatelessWidget {
             )),
       ],
     );
+  }
+}
+
+Future<List<ProductClass>> fetchProducts() async {
+  try {
+    var userCollectionSnapshot =
+        await FirebaseFirestore.instance.collection('Products').get();
+    return userCollectionSnapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data();
+      return ProductClass.fromJson(data);
+    }).toList();
+  } catch (e) {
+    print("Error fetching products: $e");
+    return [];
   }
 }
