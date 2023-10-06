@@ -217,7 +217,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       );
                       print('triggerd');
                     }
-                    return;
+                    Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,

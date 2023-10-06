@@ -38,20 +38,7 @@ class ScreenAddProduct extends StatelessWidget {
               onPressed: () async {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => ProductListScreen(),
-                  ),
-                );
-              },
-              icon: const Icon(
-                Icons.ac_unit_outlined,
-                color: Colors.black,
-              ),
-            ),
-            IconButton(
-              onPressed: () async {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => AddProductScreen(),
+                    builder: (context) => const AddProductScreen(),
                   ),
                 );
               },
@@ -63,60 +50,60 @@ class ScreenAddProduct extends StatelessWidget {
           ],
         ),
         body: SingleChildScrollView(
-          child: Container(
-            decoration: BoxDecoration(gradient: gcolor),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 50,
-                ),
-                Center(
-                  child: FutureBuilder<List<ProductClass>>(
-                    future: fetchProducts(),
-                    builder: (context, snapshot) {
-                      if (snapshot.data == null) {
-                      } else if (snapshot.hasError) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.hasData) {
-                        print('--------------------${snapshot.data!.length}');
-                        return ListView.separated(
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: snapshot.data!.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return AddProductCard(
-                              delete: () {},
-                              edit: () {},
-                              img: snapshot.data![index].imageUrl ??
-                                  'https://plugins.jetbrains.com/files/12562/386947/icon/pluginIcon.png',
-                              name: snapshot.data![index].name ?? 'hello',
-                            );
-                          },
-                          separatorBuilder: (context, index) {
-                            return const SizedBox(
-                              height: 25,
-                            );
-                          },
-                        );
-                      }
-                      return Center(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 50,
+              ),
+              Center(
+                child: FutureBuilder<List<ProductClass>>(
+                  future: fetchProducts(),
+                  builder: (context, snapshot) {
+                    if (snapshot.data == null) {
+                      const Center(
                         child: Text('no data'),
                       );
-                      //  else if (snapshot.connectionState ==
-                      //     ConnectionState.waiting) {
-                      //   return const HomeProductShimmerEffect();
-                      // }
-                      // return const HomeProductShimmerEffect();
-                    },
-                  ),
+                    } else if (snapshot.hasError) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasData) {
+                      print('--------------------${snapshot.data!.length}');
+                      return ListView.separated(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data!.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return AddProductCard(
+                            delete: () {},
+                            edit: () {},
+                            img: snapshot.data![index].imageUrl ??
+                                'https://plugins.jetbrains.com/files/12562/386947/icon/pluginIcon.png',
+                            name: snapshot.data![index].name ?? 'hello',
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const SizedBox(
+                            height: 25,
+                          );
+                        },
+                      );
+                    }
+                    // } else if (snapshot.connectionState ==
+                    //     ConnectionState.waiting) {
+                    //   return const HomeProductShimmerEffect();
+                    // }
+                    // return const HomeProductShimmerEffect();
+                    return const Center(
+                      child: Text('no data'),
+                    );
+                  },
                 ),
-                const SizedBox(
-                  height: 50,
-                )
-              ],
-            ),
+              ),
+              const SizedBox(
+                height: 50,
+              )
+            ],
           ),
         ),
       ),
@@ -140,43 +127,51 @@ class AddProductCard extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          height: 250,
-          width: 340,
-          decoration: const BoxDecoration(color: Colors.amber),
-          child: Image.network(
-            img,
-            fit: BoxFit.cover,
-          ),
-        ),
-        Container(
-            height: 60,
-            width: 340,
-            decoration: const BoxDecoration(color: Colors.white),
-            child: ListTile(
-              leading: Text(
-                name,
-                style: const TextStyle(
-                  fontSize: 20,
+        Card(
+          elevation: 5,
+          child: Column(
+            children: [
+              Container(
+                height: 250,
+                width: 340,
+                decoration: const BoxDecoration(color: Colors.amber),
+                child: Image.network(
+                  img,
+                  fit: BoxFit.cover,
                 ),
               ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text('Edit'),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Remove',
-                      style: TextStyle(color: Colors.red),
+              Container(
+                height: 60,
+                width: 340,
+                decoration: const BoxDecoration(gradient: gcolor),
+                child: ListTile(
+                  leading: Text(
+                    name,
+                    style: const TextStyle(
+                      fontSize: 20,
                     ),
                   ),
-                ],
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text('Edit'),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text(
+                          'Remove',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            )),
+            ],
+          ),
+        ),
       ],
     );
   }
