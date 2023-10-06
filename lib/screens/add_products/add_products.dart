@@ -2,7 +2,6 @@ import 'package:admin_gardenia/data/fetch_product.dart';
 import 'package:admin_gardenia/models/product_model.dart';
 import 'package:admin_gardenia/screens/add_products/adding_screen.dart';
 import 'package:admin_gardenia/screens/home/home.dart';
-import 'package:admin_gardenia/widget/shimmer_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
