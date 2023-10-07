@@ -1,6 +1,6 @@
-import 'package:admin_gardenia/data/fetch_product.dart';
 import 'package:admin_gardenia/models/product_model.dart';
 import 'package:admin_gardenia/screens/add_products/adding_screen.dart';
+import 'package:admin_gardenia/screens/add_products/product_discription.dart';
 import 'package:admin_gardenia/screens/home/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +74,11 @@ class ScreenAddProduct extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return AddProductCard(
+                            category:
+                                snapshot.data![index].category ?? 'null data',
+                            discription: snapshot.data![index].description ??
+                                'null data',
+                            price: snapshot.data![index].price ?? 'null Data',
                             delete: () {},
                             edit: () {},
                             img: snapshot.data![index].imageUrl ??
@@ -116,9 +121,15 @@ class AddProductCard extends StatelessWidget {
       required this.name,
       required this.img,
       required this.delete,
-      required this.edit});
+      required this.edit,
+      required this.price,
+      required this.category,
+      required this.discription});
   final String name;
   final String img;
+  final String price;
+  final String category;
+  final String discription;
   VoidCallback edit;
   VoidCallback delete;
   @override
@@ -126,49 +137,64 @@ class AddProductCard extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Card(
-          elevation: 5,
-          child: Column(
-            children: [
-              Container(
-                height: 250,
-                width: 340,
-                decoration: const BoxDecoration(color: Colors.amber),
-                child: Image.network(
-                  img,
-                  fit: BoxFit.cover,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ProductDiscription(
+                  img: img,
+                  category: category,
+                  discription: discription,
+                  name: name,
+                  price: price,
                 ),
               ),
-              Container(
-                height: 60,
-                width: 340,
-                decoration: const BoxDecoration(gradient: gcolor),
-                child: ListTile(
-                  leading: Text(
-                    name,
-                    style: const TextStyle(
-                      fontSize: 20,
+            );
+          },
+          child: Card(
+            elevation: 5,
+            child: Column(
+              children: [
+                Container(
+                  height: 250,
+                  width: 340,
+                  decoration: const BoxDecoration(color: Colors.amber),
+                  child: Image.network(
+                    img,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Container(
+                  height: 60,
+                  width: 340,
+                  decoration: const BoxDecoration(gradient: gcolor),
+                  child: ListTile(
+                    leading: Text(
+                      name,
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text('Edit'),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text(
+                            'Remove',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text('Edit'),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'Remove',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -180,10 +206,12 @@ Future<List<ProductClass>> fetchProducts() async {
   try {
     var userCollectionSnapshot =
         await FirebaseFirestore.instance.collection('Products').get();
-    return userCollectionSnapshot.docs.map((doc) {
-      Map<String, dynamic> data = doc.data();
-      return ProductClass.fromJson(data);
-    }).toList();
+    return userCollectionSnapshot.docs.map(
+      (doc) {
+        Map<String, dynamic> data = doc.data();
+        return ProductClass.fromJson(data);
+      },
+    ).toList();
   } catch (e) {
     print("Error fetching products: $e");
     return [];

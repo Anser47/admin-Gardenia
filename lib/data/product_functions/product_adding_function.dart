@@ -52,5 +52,6 @@ Future<void> addProductToFirebase(
     'description': product.description,
     'category': product.category,
     'imageUrl': imgUrl,
+    'id': uniqueFileName,
   });
 }

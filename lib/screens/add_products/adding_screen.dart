@@ -202,12 +202,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         name: _nameControllor.text.trim(),
                         quantity: _quantityControllor.text.trim(),
                       );
-                      // productModel.description =
-                      //     _discriptionControllor.text.trim();
-                      // productModel.quantity = ;
-                      // productModel.price = ;
-                      // productModel.productname = ;
-                      // productModel.dropdownValue = ;
+
                       BlocProvider.of<AddProductBloc>(context).add(
                         FirebaseAddEvent(
                             uniqueFileName: uniqueFileName,
@@ -216,8 +211,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             product: productModel),
                       );
                       print('triggerd');
+                      Navigator.of(context).pop();
                     }
-                    Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
