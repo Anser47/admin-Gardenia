@@ -1,4 +1,3 @@
-import 'package:admin_gardenia/data/fetch_product.dart';
 import 'package:admin_gardenia/sample.dart';
 import 'package:admin_gardenia/screens/add_products/add_products.dart';
 import 'package:admin_gardenia/screens/auth/auth.dart';

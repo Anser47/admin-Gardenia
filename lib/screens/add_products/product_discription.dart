@@ -18,8 +18,8 @@ class ProductDiscription extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 1, 52, 3),
-          title: Text('Product discription'),
+          backgroundColor: const Color.fromARGB(255, 1, 52, 3),
+          title: const Text('Product discription'),
         ),
         body: Discription(
             img: img,
@@ -80,7 +80,7 @@ class Discription extends StatelessWidget {
                   children: [
                     Text(
                       '₹$price',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.green,
                         fontSize: 24,
                       ),
@@ -90,8 +90,8 @@ class Discription extends StatelessWidget {
                     ),
                     Text(
                       'Category: $category',
-                      style: TextStyle(
-                          color: const Color.fromARGB(255, 133, 133, 133),
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 133, 133, 133),
                           fontSize: 20),
                     ),
                   ],
@@ -107,11 +107,11 @@ class Discription extends StatelessWidget {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
-                      padding: EdgeInsets.all(10),
-                      minimumSize: Size(150, 50),
+                      padding: const EdgeInsets.all(10),
+                      minimumSize: const Size(150, 50),
                     ),
                     onPressed: () {},
-                    child: Text(
+                    child: const Text(
                       'Edit',
                       style: TextStyle(
                         color: Colors.green,
@@ -130,7 +130,7 @@ class Discription extends StatelessWidget {
                       minimumSize: Size(150, 50),
                     ),
                     onPressed: () {},
-                    child: Text(
+                    child: const Text(
                       'Delete',
                       style: TextStyle(
                         color: Colors.red,

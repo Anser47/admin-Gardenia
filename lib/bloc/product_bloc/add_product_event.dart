@@ -15,3 +15,5 @@ class FirebaseAddEvent extends AddProductEvent {
       required this.uniqueFileName,
       required this.imageFile});
 }
+
+class FirebaseProductEvent extends AddProductEvent {}

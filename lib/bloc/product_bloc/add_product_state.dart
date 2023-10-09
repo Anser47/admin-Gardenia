@@ -11,3 +11,8 @@ class AddProductDataState extends AddProductEvent {
   ProductClass productStateObj;
   AddProductDataState({required this.productStateObj});
 }
+
+class FirebaseProductState extends AddProductState {
+  List<ProductClass> listProduct;
+  FirebaseProductState({required this.listProduct});
+}

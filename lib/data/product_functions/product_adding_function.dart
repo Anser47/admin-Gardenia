@@ -37,11 +37,12 @@ Future<String> uploadImageToFirebase({required File imageFile}) async {
   return 'Empty';
 }
 
-Future<void> addProductToFirebase(
-    {required ProductClass product,
-    required String imgUrl,
-    BuildContext? context,
-    required String uniqueFileName}) async {
+Future<void> addProductToFirebase({
+  required ProductClass product,
+  required String imgUrl,
+  BuildContext? context,
+  required String uniqueFileName,
+}) async {
   await FirebaseFirestore.instance
       .collection('Products')
       .doc(uniqueFileName)
