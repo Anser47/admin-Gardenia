@@ -29,7 +29,6 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
         await addProductToFirebase(
           imgUrl: imgUrl,
           product: event.product,
-          uniqueFileName: event.uniqueFileName,
           context: event.context,
         );
         emit(

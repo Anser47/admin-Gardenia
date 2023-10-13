@@ -190,16 +190,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         price: _priceControllor.text.trim(),
                         name: _nameControllor.text.trim(),
                         quantity: _quantityControllor.text.trim(),
+                        id: uniqueFileName,
                       );
 
                       BlocProvider.of<AddProductBloc>(context).add(
                         FirebaseAddEvent(
-                            uniqueFileName: uniqueFileName,
-                            imageFile: path!,
-                            context: context,
-                            product: productModel),
+                          imageFile: path!,
+                          context: context,
+                          product: productModel,
+                        ),
                       );
                       print('triggerd');
+                      if (!context.mounted) {
+                        return;
+                      }
                       Navigator.of(context).pop();
                     }
                   },
