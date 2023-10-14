@@ -1,5 +1,5 @@
 import 'package:admin_gardenia/sample.dart';
-import 'package:admin_gardenia/screens/add_products/add_products.dart';
+import 'package:admin_gardenia/screens/add_products/added_products.dart';
 import 'package:admin_gardenia/screens/auth/auth.dart';
 import 'package:admin_gardenia/screens/earnings/earnings.dart';
 import 'package:admin_gardenia/screens/orders/orders.dart';
@@ -10,7 +10,7 @@ import 'package:flutter/rendering.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
   List<Widget> _screens = [
-    ScreenAddProduct(),
+    ScreenAddedProducts(),
     ScreenEarnings(),
     ScreenStocks(),
     OrdersScreen(),

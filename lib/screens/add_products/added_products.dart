@@ -2,14 +2,16 @@ import 'package:admin_gardenia/models/product_model.dart';
 import 'package:admin_gardenia/screens/add_products/adding_screen.dart';
 import 'package:admin_gardenia/screens/add_products/product_discription.dart';
 import 'package:admin_gardenia/screens/home/home.dart';
+import 'package:admin_gardenia/widget/shimmer_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ScreenAddProduct extends StatelessWidget {
-  const ScreenAddProduct({
+class ScreenAddedProducts extends StatelessWidget {
+  ScreenAddedProducts({
     super.key,
   });
-
+  CollectionReference productRef =
+      FirebaseFirestore.instance.collection('Products');
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -55,51 +57,50 @@ class ScreenAddProduct extends StatelessWidget {
                 height: 50,
               ),
               Center(
-                child: FutureBuilder<List<ProductClass>>(
-                  future: fetchProducts(),
+                child: StreamBuilder(
+                  stream: productRef.snapshots(),
                   builder: (context, snapshot) {
+                    List<QueryDocumentSnapshot<Object?>> data = [];
                     if (snapshot.data == null) {
                       const Center(
-                        child: Text('no data'),
-                      );
-                    } else if (snapshot.hasError) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasData) {
-                      print('--------------------${snapshot.data!.length}');
-                      return ListView.separated(
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data!.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return AddProductCard(
-                            category:
-                                snapshot.data![index].category ?? 'null data',
-                            discription: snapshot.data![index].description ??
-                                'null data',
-                            price: snapshot.data![index].price ?? 'null Data',
-                            delete: () {},
-                            edit: () {},
-                            img: snapshot.data![index].imageUrl ??
-                                'https://plugins.jetbrains.com/files/12562/386947/icon/pluginIcon.png',
-                            name: snapshot.data![index].name ?? 'hello',
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(
-                            height: 25,
-                          );
-                        },
+                        child: Text('Add Products'),
                       );
                     }
-                    // } else if (snapshot.connectionState ==
-                    //     ConnectionState.waiting) {
-                    //   return const HomeProductShimmerEffect();
-                    // }
-                    // return const HomeProductShimmerEffect();
-                    return const Center(
-                      child: Text('no data'),
+                    data = snapshot.data!.docs;
+                    if (snapshot.data!.docs.isEmpty || data.isEmpty) {
+                      return const Center(
+                        child: Text('No Products'),
+                      );
+                    }
+                    print('--------------------${data.length}');
+                    return ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: data.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return AddProductCard(
+                          category: data[index]['category'] ?? 'null data',
+                          discription:
+                              data[index]['description'] ?? 'null data',
+                          price: data[index]['price'] ?? 'null Data',
+                          delete: () {},
+                          edit: () {},
+                          img: data[index]['imageUrl'] ??
+                              'https://plugins.jetbrains.com/files/12562/386947/icon/pluginIcon.png',
+                          name: data[index]['name'] ?? 'name',
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(
+                          height: 25,
+                        );
+                      },
                     );
                   },
                 ),
