@@ -1,8 +1,12 @@
+import 'dart:developer';
+
+import 'package:admin_gardenia/data/product_functions/product_remove.dart';
 import 'package:admin_gardenia/models/product_model.dart';
 import 'package:admin_gardenia/screens/add_products/adding_screen.dart';
+import 'package:admin_gardenia/screens/add_products/editing_screen.dart';
 import 'package:admin_gardenia/screens/add_products/product_discription.dart';
+import 'package:admin_gardenia/screens/earnings/earnings.dart';
 import 'package:admin_gardenia/screens/home/home.dart';
-import 'package:admin_gardenia/widget/shimmer_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -73,6 +77,7 @@ class ScreenAddedProducts extends StatelessWidget {
                       );
                     }
                     print('--------------------${data.length}');
+
                     return ListView.separated(
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: data.length,
@@ -85,14 +90,25 @@ class ScreenAddedProducts extends StatelessWidget {
                           );
                         }
                         return AddProductCard(
+                          id: data[index]['id'],
                           category: data[index]['category'] ?? 'null data',
                           discription:
                               data[index]['description'] ?? 'null data',
                           price: data[index]['price'] ?? 'null Data',
-                          delete: () {},
-                          edit: () {},
+                          delete: () {
+                            deleteProduct(id: data[index].id, context: context);
+                          },
+                          edit: () {
+                            log('Hello== edit');
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ScreenEditing();
+                              },
+                            );
+                          },
                           img: data[index]['imageUrl'] ??
-                              'https://plugins.jetbrains.com/files/12562/386947/icon/pluginIcon.png',
+                              'https://static.wikia.nocookie.net/black-plasma-studios/images/a/ad/Null_-_Profile.jpg/revision/latest?cb=20170612234434',
                           name: data[index]['name'] ?? 'name',
                         );
                       },
@@ -107,7 +123,7 @@ class ScreenAddedProducts extends StatelessWidget {
               ),
               const SizedBox(
                 height: 50,
-              )
+              ),
             ],
           ),
         ),
@@ -116,7 +132,7 @@ class ScreenAddedProducts extends StatelessWidget {
   }
 }
 
-class AddProductCard extends StatelessWidget {
+class AddProductCard extends StatefulWidget {
   AddProductCard(
       {super.key,
       required this.name,
@@ -125,14 +141,22 @@ class AddProductCard extends StatelessWidget {
       required this.edit,
       required this.price,
       required this.category,
-      required this.discription});
+      required this.discription,
+      required this.id});
   final String name;
   final String img;
+  final String id;
   final String price;
   final String category;
   final String discription;
   VoidCallback edit;
   VoidCallback delete;
+
+  @override
+  State<AddProductCard> createState() => _AddProductCardState();
+}
+
+class _AddProductCardState extends State<AddProductCard> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -143,11 +167,11 @@ class AddProductCard extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => ProductDiscription(
-                  img: img,
-                  category: category,
-                  discription: discription,
-                  name: name,
-                  price: price,
+                  img: widget.img,
+                  category: widget.category,
+                  discription: widget.discription,
+                  name: widget.name,
+                  price: widget.price,
                 ),
               ),
             );
@@ -161,7 +185,7 @@ class AddProductCard extends StatelessWidget {
                   width: 340,
                   decoration: const BoxDecoration(color: Colors.amber),
                   child: Image.network(
-                    img,
+                    widget.img,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -171,7 +195,7 @@ class AddProductCard extends StatelessWidget {
                   decoration: const BoxDecoration(gradient: gcolor),
                   child: ListTile(
                     leading: Text(
-                      name,
+                      widget.name,
                       style: const TextStyle(
                         fontSize: 20,
                       ),
@@ -180,11 +204,26 @@ class AddProductCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ScreenEditing();
+                              },
+                            );
+                          },
                           child: const Text('Edit'),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            // setState(() {
+                            //   widget.delete;
+                            // });
+                            await FirebaseFirestore.instance
+                                .collection('Products')
+                                .doc(widget.id)
+                                .delete();
+                          },
                           child: const Text(
                             'Remove',
                             style: TextStyle(color: Colors.red),
