@@ -66,7 +66,7 @@ class ScreenAddedProducts extends StatelessWidget {
                   builder: (context, snapshot) {
                     List<QueryDocumentSnapshot<Object?>> data = [];
                     if (snapshot.data == null) {
-                      const Center(
+                      return const Center(
                         child: Text('Add Products'),
                       );
                     }
@@ -76,7 +76,9 @@ class ScreenAddedProducts extends StatelessWidget {
                         child: Text('No Products'),
                       );
                     }
-                    print('--------------------${data.length}');
+                    print(
+                      '--------------------${data.length}',
+                    );
 
                     return ListView.separated(
                       physics: const NeverScrollableScrollPhysics(),
@@ -96,7 +98,10 @@ class ScreenAddedProducts extends StatelessWidget {
                               data[index]['description'] ?? 'null data',
                           price: data[index]['price'] ?? 'null Data',
                           delete: () {
-                            deleteProduct(id: data[index].id, context: context);
+                            deleteProduct(
+                              id: data[index].id,
+                              context: context,
+                            );
                           },
                           edit: () {
                             log('Hello== edit');
