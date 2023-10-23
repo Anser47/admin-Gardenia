@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:admin_gardenia/screens/add_products/commom.dart';
 import 'package:admin_gardenia/screens/add_products/editing_pages.dart';
+import 'package:admin_gardenia/widget/common_widget.dart';
 import 'package:flutter/material.dart';
 
 class ScreenEditing extends StatefulWidget {
@@ -15,9 +15,6 @@ class _ScreenEditingState extends State<ScreenEditing> {
   final _form = GlobalKey<FormState>();
 
   File? pickedImageFile;
-  final kSize = SizedBox(
-    height: 20,
-  );
   String dropdownValue = 'Indoor';
 
   final _priceControllor = TextEditingController();
@@ -50,7 +47,7 @@ class _ScreenEditingState extends State<ScreenEditing> {
               color: Colors.black,
             ),
           ),
-          kSize,
+          kSize20,
           Padding(
             padding: const EdgeInsets.all(9.0),
             child: CommonButton(
@@ -63,30 +60,70 @@ class _ScreenEditingState extends State<ScreenEditing> {
                   );
                 }),
           ),
-          kSize,
+          kSize20,
           Padding(
             padding: const EdgeInsets.all(9.0),
-            child: CommonButton(name: 'Product Name', voidCallback: () {}),
+            child: CommonButton(
+                name: 'Product Name',
+                voidCallback: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ProductNameEditScreen(),
+                    ),
+                  );
+                }),
           ),
-          kSize,
+          kSize20,
           Padding(
             padding: const EdgeInsets.all(9.0),
-            child: CommonButton(name: 'Price', voidCallback: () {}),
+            child: CommonButton(
+                name: 'Price',
+                voidCallback: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => PriceEditScreen(),
+                    ),
+                  );
+                }),
           ),
-          kSize,
+          kSize20,
           Padding(
             padding: const EdgeInsets.all(9.0),
-            child: CommonButton(name: 'Quantity', voidCallback: () {}),
+            child: CommonButton(
+                name: 'Quantity',
+                voidCallback: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => QuantityEditScreen(),
+                    ),
+                  );
+                }),
           ),
-          kSize,
+          kSize20,
           Padding(
             padding: const EdgeInsets.all(9.0),
-            child: CommonButton(name: 'Category', voidCallback: () {}),
+            child: CommonButton(
+                name: 'Category',
+                voidCallback: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CategoryEditScreen(),
+                    ),
+                  );
+                }),
           ),
-          kSize,
+          kSize20,
           Padding(
             padding: const EdgeInsets.all(9.0),
-            child: CommonButton(name: 'Discription', voidCallback: () {}),
+            child: CommonButton(
+                name: 'Discription',
+                voidCallback: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => DiscriptionEditScreen(),
+                    ),
+                  );
+                }),
           ),
         ],
       ),

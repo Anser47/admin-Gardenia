@@ -1,4 +1,5 @@
 import 'package:admin_gardenia/bloc/product_bloc/add_product_bloc.dart';
+import 'package:admin_gardenia/widget/common_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,11 +13,15 @@ class ImageEditScreen extends StatelessWidget {
         appBar: AppBar(backgroundColor: Colors.black),
         body: Column(
           children: [
+            SizedBox(
+              height: 20,
+            ),
             Center(
               child: Container(
-                height: 200,
+                height: MediaQuery.sizeOf(context).height * 0.3,
+                width: MediaQuery.sizeOf(context).width * 0.9,
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: GestureDetector(
@@ -45,6 +50,10 @@ class ImageEditScreen extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(
+              height: 20,
+            ),
+            CommonButton(name: 'Update new image', voidCallback: () {})
           ],
         ),
       ),
@@ -53,29 +62,83 @@ class ImageEditScreen extends StatelessWidget {
 }
 
 class ProductNameEditScreen extends StatelessWidget {
-  const ProductNameEditScreen({super.key});
-
+  ProductNameEditScreen({super.key});
+  final _nameControllor = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+      ),
+      body: Column(
+        children: [
+          kSize20,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CommonTextFields(
+                inputType: TextInputType.name,
+                labelText: 'Productname',
+                validator: 'Please Enter Product Name',
+                nameControllor: _nameControllor),
+          ),
+          kSize20,
+          CommonButton(name: 'Update new name', voidCallback: () {}),
+        ],
+      ),
+    );
   }
 }
 
 class PriceEditScreen extends StatelessWidget {
-  const PriceEditScreen({super.key});
-
+  PriceEditScreen({super.key});
+  final _PriceControllor = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: CommonTextFields(
+                inputType: TextInputType.number,
+                labelText: 'Price',
+                validator: 'Please Enter Product Price',
+                nameControllor: _PriceControllor),
+          ),
+          CommonButton(name: 'Update new price', voidCallback: () {})
+        ],
+      ),
+    );
   }
 }
 
 class QuantityEditScreen extends StatelessWidget {
-  const QuantityEditScreen({super.key});
+  QuantityEditScreen({super.key});
+  final _quantityControllor = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: CommonTextFields(
+                inputType: TextInputType.number,
+                labelText: 'Quantity',
+                validator: 'Please Enter Product Quantity',
+                nameControllor: _quantityControllor),
+          ),
+          CommonButton(name: 'Update new quantity', voidCallback: () {})
+        ],
+      ),
+    );
   }
 }
 
@@ -84,15 +147,38 @@ class CategoryEditScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+      ),
+    );
   }
 }
 
 class DiscriptionEditScreen extends StatelessWidget {
-  const DiscriptionEditScreen({super.key});
+  DiscriptionEditScreen({super.key});
+  final _discriptionControllor = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: CommonTextFields(
+              inputType: TextInputType.number,
+              labelText: 'Discription',
+              validator: 'Please Enter Product discription',
+              nameControllor: _discriptionControllor,
+            ),
+          ),
+          CommonButton(name: 'Update new Discription', voidCallback: () {})
+        ],
+      ),
+    );
   }
 }
