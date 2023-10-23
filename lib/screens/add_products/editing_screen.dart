@@ -5,26 +5,13 @@ import 'package:admin_gardenia/widget/common_widget.dart';
 import 'package:flutter/material.dart';
 
 class ScreenEditing extends StatefulWidget {
-  ScreenEditing({super.key});
-
+  ScreenEditing({super.key, required this.id});
+  final String id;
   @override
   State<ScreenEditing> createState() => _ScreenEditingState();
 }
 
 class _ScreenEditingState extends State<ScreenEditing> {
-  final _form = GlobalKey<FormState>();
-
-  File? pickedImageFile;
-  String dropdownValue = 'Indoor';
-
-  final _priceControllor = TextEditingController();
-
-  final _nameControllor = TextEditingController();
-
-  final _quantityControllor = TextEditingController();
-
-  final _discriptionControllor = TextEditingController();
-
   String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
 
   late File? path;
@@ -47,7 +34,7 @@ class _ScreenEditingState extends State<ScreenEditing> {
               color: Colors.black,
             ),
           ),
-          kSize20,
+          kHeight20,
           Padding(
             padding: const EdgeInsets.all(9.0),
             child: CommonButton(
@@ -60,7 +47,7 @@ class _ScreenEditingState extends State<ScreenEditing> {
                   );
                 }),
           ),
-          kSize20,
+          kHeight20,
           Padding(
             padding: const EdgeInsets.all(9.0),
             child: CommonButton(
@@ -68,12 +55,13 @@ class _ScreenEditingState extends State<ScreenEditing> {
                 voidCallback: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => ProductNameEditScreen(),
+                      builder: (context) =>
+                          ProductNameEditScreen(id: widget.id),
                     ),
                   );
                 }),
           ),
-          kSize20,
+          kHeight20,
           Padding(
             padding: const EdgeInsets.all(9.0),
             child: CommonButton(
@@ -81,12 +69,12 @@ class _ScreenEditingState extends State<ScreenEditing> {
                 voidCallback: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PriceEditScreen(),
+                      builder: (context) => PriceEditScreen(id: widget.id),
                     ),
                   );
                 }),
           ),
-          kSize20,
+          kHeight20,
           Padding(
             padding: const EdgeInsets.all(9.0),
             child: CommonButton(
@@ -94,12 +82,12 @@ class _ScreenEditingState extends State<ScreenEditing> {
                 voidCallback: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => QuantityEditScreen(),
+                      builder: (context) => QuantityEditScreen(id: widget.id),
                     ),
                   );
                 }),
           ),
-          kSize20,
+          kHeight20,
           Padding(
             padding: const EdgeInsets.all(9.0),
             child: CommonButton(
@@ -107,12 +95,12 @@ class _ScreenEditingState extends State<ScreenEditing> {
                 voidCallback: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => CategoryEditScreen(),
+                      builder: (context) => CategoryEditScreen(id: widget.id),
                     ),
                   );
                 }),
           ),
-          kSize20,
+          kHeight20,
           Padding(
             padding: const EdgeInsets.all(9.0),
             child: CommonButton(
@@ -120,7 +108,8 @@ class _ScreenEditingState extends State<ScreenEditing> {
                 voidCallback: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => DiscriptionEditScreen(),
+                      builder: (context) =>
+                          DescriptionEditScreen(id: widget.id),
                     ),
                   );
                 }),

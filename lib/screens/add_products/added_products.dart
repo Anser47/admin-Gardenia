@@ -104,11 +104,13 @@ class ScreenAddedProducts extends StatelessWidget {
                             );
                           },
                           edit: () {
-                            log('Hello== edit');
+                            log('Hello== this is edit');
                             showDialog(
                               context: context,
                               builder: (context) {
-                                return ScreenEditing();
+                                return ScreenEditing(
+                                  id: data[index]['id'],
+                                );
                               },
                             );
                           },
@@ -213,7 +215,9 @@ class _AddProductCardState extends State<AddProductCard> {
                             showDialog(
                               context: context,
                               builder: (context) {
-                                return ScreenEditing();
+                                return ScreenEditing(
+                                  id: widget.id,
+                                );
                               },
                             );
                           },
@@ -221,9 +225,6 @@ class _AddProductCardState extends State<AddProductCard> {
                         ),
                         TextButton(
                           onPressed: () async {
-                            // setState(() {
-                            //   widget.delete;
-                            // });
                             await FirebaseFirestore.instance
                                 .collection('Products')
                                 .doc(widget.id)

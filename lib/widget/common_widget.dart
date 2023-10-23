@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
-final kSize20 = SizedBox(
+const kHeight20 = SizedBox(
   height: 20,
 );
 
 class CommonButton extends StatelessWidget {
-  CommonButton({super.key, required this.name, required this.voidCallback});
+  CommonButton({
+    super.key,
+    required this.name,
+    required this.voidCallback,
+  });
   final String name;
+
   VoidCallback voidCallback;
   @override
   Widget build(BuildContext context) {
@@ -21,11 +26,50 @@ class CommonButton extends StatelessWidget {
           ),
         ),
         backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-        minimumSize: MaterialStateProperty.all<Size>(const Size(350, 60)),
+        minimumSize: MaterialStateProperty.all<Size>(
+          const Size(350, 60),
+        ),
       ),
       child: Text(
         name,
-        style: TextStyle(fontSize: 20),
+        style: const TextStyle(fontSize: 20),
+      ),
+    );
+  }
+}
+
+class CommonButtonTwo extends StatelessWidget {
+  CommonButtonTwo(
+      {super.key,
+      required this.name,
+      required this.voidCallback,
+      this.change,
+      this.id});
+  final String name;
+  final String? change;
+  final String? id;
+  VoidCallback voidCallback;
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        voidCallback();
+        Navigator.of(context).pop();
+      },
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+        ),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+        minimumSize: MaterialStateProperty.all<Size>(
+          const Size(350, 60),
+        ),
+      ),
+      child: Text(
+        name,
+        style: const TextStyle(fontSize: 20),
       ),
     );
   }

@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:admin_gardenia/bloc/product_bloc/add_product_bloc.dart';
 import 'package:admin_gardenia/widget/common_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ImageEditScreen extends StatelessWidget {
-  const ImageEditScreen({super.key});
-
+  ImageEditScreen({super.key});
+  File? pickedImageFile;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -13,9 +16,7 @@ class ImageEditScreen extends StatelessWidget {
         appBar: AppBar(backgroundColor: Colors.black),
         body: Column(
           children: [
-            SizedBox(
-              height: 20,
-            ),
+            kHeight20,
             Center(
               child: Container(
                 height: MediaQuery.sizeOf(context).height * 0.3,
@@ -50,10 +51,8 @@ class ImageEditScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
-            CommonButton(name: 'Update new image', voidCallback: () {})
+            kHeight20,
+            // CommonButton(name: 'Update new image', voidCallback: () {}),
           ],
         ),
       ),
@@ -61,8 +60,10 @@ class ImageEditScreen extends StatelessWidget {
   }
 }
 
+/*================name====================== */
 class ProductNameEditScreen extends StatelessWidget {
-  ProductNameEditScreen({super.key});
+  ProductNameEditScreen({super.key, required this.id});
+  final String id;
   final _nameControllor = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -72,7 +73,7 @@ class ProductNameEditScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          kSize20,
+          kHeight20,
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: CommonTextFields(
@@ -81,17 +82,29 @@ class ProductNameEditScreen extends StatelessWidget {
                 validator: 'Please Enter Product Name',
                 nameControllor: _nameControllor),
           ),
-          kSize20,
-          CommonButton(name: 'Update new name', voidCallback: () {}),
+          kHeight20,
+          CommonButtonTwo(
+            change: _nameControllor.text,
+            id: id,
+            name: 'Update new name',
+            voidCallback: () {
+              FirebaseFirestore.instance.collection('Products').doc(id).update({
+                'name': _nameControllor.text.trim(),
+              });
+            },
+          ),
         ],
       ),
     );
   }
 }
 
+/*================Price====================== */
 class PriceEditScreen extends StatelessWidget {
-  PriceEditScreen({super.key});
-  final _PriceControllor = TextEditingController();
+  PriceEditScreen({super.key, required this.id});
+  final _priceControllor = TextEditingController();
+  final String id;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,18 +119,29 @@ class PriceEditScreen extends StatelessWidget {
                 inputType: TextInputType.number,
                 labelText: 'Price',
                 validator: 'Please Enter Product Price',
-                nameControllor: _PriceControllor),
+                nameControllor: _priceControllor),
           ),
-          CommonButton(name: 'Update new price', voidCallback: () {})
+          CommonButtonTwo(
+              name: 'Update new price',
+              voidCallback: () {
+                FirebaseFirestore.instance
+                    .collection('Products')
+                    .doc(id)
+                    .update({
+                  'price': _priceControllor.text.trim(),
+                });
+              })
         ],
       ),
     );
   }
 }
 
+/*================Quantity====================== */
 class QuantityEditScreen extends StatelessWidget {
-  QuantityEditScreen({super.key});
+  QuantityEditScreen({super.key, required this.id});
   final _quantityControllor = TextEditingController();
+  final String id;
 
   @override
   Widget build(BuildContext context) {
@@ -135,15 +159,26 @@ class QuantityEditScreen extends StatelessWidget {
                 validator: 'Please Enter Product Quantity',
                 nameControllor: _quantityControllor),
           ),
-          CommonButton(name: 'Update new quantity', voidCallback: () {})
+          CommonButtonTwo(
+              name: 'Update new quantity',
+              voidCallback: () {
+                FirebaseFirestore.instance
+                    .collection('Products')
+                    .doc(id)
+                    .update({
+                  'quantity': _quantityControllor.text.trim(),
+                });
+              })
         ],
       ),
     );
   }
 }
 
+/*===================Category=================== */
 class CategoryEditScreen extends StatelessWidget {
-  const CategoryEditScreen({super.key});
+  const CategoryEditScreen({super.key, required this.id});
+  final String id;
 
   @override
   Widget build(BuildContext context) {
@@ -155,9 +190,11 @@ class CategoryEditScreen extends StatelessWidget {
   }
 }
 
-class DiscriptionEditScreen extends StatelessWidget {
-  DiscriptionEditScreen({super.key});
+/*===================Discription=================== */
+class DescriptionEditScreen extends StatelessWidget {
+  DescriptionEditScreen({super.key, required this.id});
   final _discriptionControllor = TextEditingController();
+  final String id;
 
   @override
   Widget build(BuildContext context) {
@@ -171,12 +208,21 @@ class DiscriptionEditScreen extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: CommonTextFields(
               inputType: TextInputType.number,
-              labelText: 'Discription',
+              labelText: 'Description',
               validator: 'Please Enter Product discription',
               nameControllor: _discriptionControllor,
             ),
           ),
-          CommonButton(name: 'Update new Discription', voidCallback: () {})
+          CommonButtonTwo(
+              name: 'Update new Discription',
+              voidCallback: () {
+                FirebaseFirestore.instance
+                    .collection('Products')
+                    .doc(id)
+                    .update({
+                  'description': _discriptionControllor.text.trim(),
+                });
+              })
         ],
       ),
     );
