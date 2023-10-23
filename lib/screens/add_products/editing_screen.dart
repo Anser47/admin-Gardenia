@@ -34,7 +34,6 @@ class _ScreenEditingState extends State<ScreenEditing> {
               color: Colors.black,
             ),
           ),
-          kHeight20,
           Padding(
             padding: const EdgeInsets.all(9.0),
             child: CommonButton(
@@ -42,7 +41,7 @@ class _ScreenEditingState extends State<ScreenEditing> {
                 voidCallback: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => ImageEditScreen(),
+                      builder: (context) => ImageEditScreen(id: widget.id),
                     ),
                   );
                 }),

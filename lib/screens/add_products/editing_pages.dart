@@ -1,14 +1,16 @@
 import 'dart:io';
 
 import 'package:admin_gardenia/bloc/product_bloc/add_product_bloc.dart';
+import 'package:admin_gardenia/data/product_functions/product_adding_function.dart';
 import 'package:admin_gardenia/widget/common_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ImageEditScreen extends StatelessWidget {
-  ImageEditScreen({super.key});
+  ImageEditScreen({super.key, required this.id});
   File? pickedImageFile;
+  final String id;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -33,6 +35,7 @@ class ImageEditScreen extends StatelessWidget {
                   child: BlocBuilder<AddProductBloc, AddProductState>(
                     builder: (context, state) {
                       if (state is AddImageState) {
+                        pickedImageFile = state.imagestate;
                         return Image.file(
                           state.imagestate,
                           fit: BoxFit.cover,
@@ -52,7 +55,34 @@ class ImageEditScreen extends StatelessWidget {
               ),
             ),
             kHeight20,
-            // CommonButton(name: 'Update new image', voidCallback: () {}),
+            ElevatedButton(
+              onPressed: () async {
+                final imgUrl =
+                    await uploadImageToFirebase(imageFile: pickedImageFile!);
+                FirebaseFirestore.instance
+                    .collection('Products')
+                    .doc(id)
+                    .update({
+                  'imageUrl': imgUrl,
+                });
+                Navigator.of(context).pop();
+              },
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                minimumSize: MaterialStateProperty.all<Size>(
+                  const Size(350, 60),
+                ),
+              ),
+              child: Text(
+                'Upload new image',
+                style: const TextStyle(fontSize: 20),
+              ),
+            ),
           ],
         ),
       ),
@@ -176,15 +206,76 @@ class QuantityEditScreen extends StatelessWidget {
 }
 
 /*===================Category=================== */
-class CategoryEditScreen extends StatelessWidget {
-  const CategoryEditScreen({super.key, required this.id});
+enum PlantsCategory { indoor, outdoor }
+
+class CategoryEditScreen extends StatefulWidget {
+  CategoryEditScreen({super.key, required this.id});
   final String id;
+
+  @override
+  State<CategoryEditScreen> createState() => _CategoryEditScreenState();
+}
+
+class _CategoryEditScreenState extends State<CategoryEditScreen> {
+  PlantsCategory? _character = PlantsCategory.indoor;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Select Category'),
+        centerTitle: true,
         backgroundColor: Colors.black,
+      ),
+      body: Column(
+        children: [
+          ListTile(
+            title: const Text('Indoor'),
+            leading: Radio<PlantsCategory>(
+              value: PlantsCategory.indoor,
+              groupValue: _character,
+              onChanged: (PlantsCategory? value) {
+                setState(() {
+                  _character = value;
+                });
+              },
+            ),
+          ),
+          ListTile(
+            title: const Text('Outdoor'),
+            leading: Radio<PlantsCategory>(
+              value: PlantsCategory.outdoor,
+              groupValue: _character,
+              onChanged: (PlantsCategory? value) {
+                setState(() {
+                  _character = value;
+                });
+              },
+            ),
+          ),
+          CommonButtonTwo(
+            name: 'Save',
+            voidCallback: () {
+              if (_character == PlantsCategory.indoor) {
+                FirebaseFirestore.instance
+                    .collection('Products')
+                    .doc(widget.id)
+                    .update({
+                  'category': 'Indoor',
+                });
+              } else {
+                FirebaseFirestore.instance
+                    .collection('Products')
+                    .doc(widget.id)
+                    .update(
+                  {
+                    'category': 'Outdoor',
+                  },
+                );
+              }
+            },
+          )
+        ],
       ),
     );
   }

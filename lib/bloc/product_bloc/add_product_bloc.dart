@@ -39,7 +39,9 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     );
     on<FirebaseProductEvent>((event, emit) async {
       List<ProductClass> products = fetchProducts() as List<ProductClass>;
-      emit(FirebaseProductState(listProduct: products));
+      emit(
+        FirebaseProductState(listProduct: products),
+      );
     });
   }
 }
