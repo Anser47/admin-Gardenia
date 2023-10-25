@@ -9,10 +9,10 @@ import 'package:flutter/rendering.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
-  List<Widget> _screens = [
+  final List<Widget> _screens = [
     ScreenAddedProducts(),
-    ScreenEarnings(),
-    ScreenStocks(),
+    const ScreenEarnings(),
+    const ScreenStocks(),
     OrdersScreen(),
   ];
   final List<String> _screenName = [
@@ -64,8 +64,8 @@ class HomeScreen extends StatelessWidget {
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       childAspectRatio: cardWidth / cardHeight,
                       crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 13.0,
-                      mainAxisSpacing: 16.0,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
                     ),
                     itemBuilder: (context, index) {
                       return AdminCard(

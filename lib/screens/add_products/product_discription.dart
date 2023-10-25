@@ -1,18 +1,28 @@
+import 'package:admin_gardenia/screens/add_products/editing_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ProductDiscription extends StatelessWidget {
+class ProductDiscription extends StatefulWidget {
   const ProductDiscription(
       {super.key,
       required this.name,
       required this.price,
       required this.category,
       required this.discription,
-      required this.img});
+      required this.img,
+      required this.id});
   final String name;
   final String price;
   final String category;
   final String discription;
   final String img;
+  final String id;
+
+  @override
+  State<ProductDiscription> createState() => _ProductDiscriptionState();
+}
+
+class _ProductDiscriptionState extends State<ProductDiscription> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -22,11 +32,12 @@ class ProductDiscription extends StatelessWidget {
           title: const Text('Product discription'),
         ),
         body: Discription(
-            img: img,
-            name: name,
-            price: price,
-            category: category,
-            discription: discription),
+            id: widget.id,
+            img: widget.img,
+            name: widget.name,
+            price: widget.price,
+            category: widget.category,
+            discription: widget.discription),
       ),
     );
   }
@@ -40,6 +51,7 @@ class Discription extends StatelessWidget {
     required this.price,
     required this.category,
     required this.discription,
+    required this.id,
   });
 
   final String img;
@@ -47,7 +59,7 @@ class Discription extends StatelessWidget {
   final String price;
   final String category;
   final String discription;
-
+  final String id;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -110,7 +122,16 @@ class Discription extends StatelessWidget {
                       padding: const EdgeInsets.all(10),
                       minimumSize: const Size(150, 50),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return ScreenEditing(
+                            id: id,
+                          );
+                        },
+                      );
+                    },
                     child: const Text(
                       'Edit',
                       style: TextStyle(
@@ -126,10 +147,12 @@ class Discription extends StatelessWidget {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
-                      padding: EdgeInsets.all(10),
-                      minimumSize: Size(150, 50),
+                      padding: const EdgeInsets.all(10),
+                      minimumSize: const Size(150, 50),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      _showMyDialog(context: context);
+                    },
                     child: const Text(
                       'Delete',
                       style: TextStyle(
@@ -148,6 +171,38 @@ class Discription extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Future<void> _showMyDialog({context}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: const SingleChildScrollView(
+            child: Text('Are sure you want to delete'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () async {
+                await FirebaseFirestore.instance
+                    .collection('Products')
+                    .doc(id)
+                    .delete();
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

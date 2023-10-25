@@ -5,17 +5,23 @@ import 'package:admin_gardenia/models/product_model.dart';
 import 'package:admin_gardenia/screens/add_products/adding_screen.dart';
 import 'package:admin_gardenia/screens/add_products/editing_screen.dart';
 import 'package:admin_gardenia/screens/add_products/product_discription.dart';
-import 'package:admin_gardenia/screens/earnings/earnings.dart';
 import 'package:admin_gardenia/screens/home/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ScreenAddedProducts extends StatelessWidget {
+class ScreenAddedProducts extends StatefulWidget {
   ScreenAddedProducts({
     super.key,
   });
+
+  @override
+  State<ScreenAddedProducts> createState() => _ScreenAddedProductsState();
+}
+
+class _ScreenAddedProductsState extends State<ScreenAddedProducts> {
   CollectionReference productRef =
       FirebaseFirestore.instance.collection('Products');
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -54,86 +60,103 @@ class ScreenAddedProducts extends StatelessWidget {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 50,
-              ),
-              Center(
-                child: StreamBuilder(
-                  stream: productRef.snapshots(),
-                  builder: (context, snapshot) {
-                    List<QueryDocumentSnapshot<Object?>> data = [];
-                    if (snapshot.data == null) {
-                      return const Center(
-                        child: Text('Add Products'),
-                      );
-                    }
-                    data = snapshot.data!.docs;
-                    if (snapshot.data!.docs.isEmpty || data.isEmpty) {
-                      return const Center(
-                        child: Text('No Products'),
-                      );
-                    }
-                    print(
-                      '--------------------${data.length}',
-                    );
+        body: ProductBody(productRef: productRef),
+      ),
+    );
+  }
+}
 
-                    return ListView.separated(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: data.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        return AddProductCard(
-                          id: data[index]['id'],
-                          category: data[index]['category'] ?? 'null data',
-                          discription:
-                              data[index]['description'] ?? 'null data',
-                          price: data[index]['price'] ?? 'null Data',
-                          delete: () {
-                            deleteProduct(
-                              id: data[index].id,
-                              context: context,
-                            );
-                          },
-                          edit: () {
-                            log('Hello== this is edit');
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return ScreenEditing(
-                                  id: data[index]['id'],
-                                );
-                              },
-                            );
-                          },
-                          img: data[index]['imageUrl'] ??
-                              'https://static.wikia.nocookie.net/black-plasma-studios/images/a/ad/Null_-_Profile.jpg/revision/latest?cb=20170612234434',
-                          name: data[index]['name'] ?? 'name',
+class ProductBody extends StatefulWidget {
+  const ProductBody({
+    super.key,
+    required this.productRef,
+  });
+
+  final CollectionReference<Object?> productRef;
+
+  @override
+  State<ProductBody> createState() => _ProductBodyState();
+}
+
+class _ProductBodyState extends State<ProductBody> {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 50,
+          ),
+          Center(
+            child: StreamBuilder(
+              stream: widget.productRef.snapshots(),
+              builder: (context, snapshot) {
+                List<QueryDocumentSnapshot<Object?>> data = [];
+                if (snapshot.data == null) {
+                  return const Center(
+                    child: Text('Add Products'),
+                  );
+                }
+                data = snapshot.data!.docs;
+                if (snapshot.data!.docs.isEmpty || data.isEmpty) {
+                  return const Center(
+                    child: Text('No Products'),
+                  );
+                }
+                print(
+                  '--------------------${data.length}',
+                );
+
+                return ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: data.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return AddProductCard(
+                      id: data[index]['id'],
+                      category: data[index]['category'] ?? 'null data',
+                      discription: data[index]['description'] ?? 'null data',
+                      price: data[index]['price'] ?? 'null Data',
+                      delete: () {
+                        deleteProduct(
+                          id: data[index].id,
+                          context: context,
                         );
                       },
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(
-                          height: 25,
+                      edit: () {
+                        log('Hello== this is edit');
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return ScreenEditing(
+                              id: data[index]['id'],
+                            );
+                          },
                         );
                       },
+                      img: data[index]['imageUrl'] ??
+                          'https://static.wikia.nocookie.net/black-plasma-studios/images/a/ad/Null_-_Profile.jpg/revision/latest?cb=20170612234434',
+                      name: data[index]['name'] ?? 'name',
                     );
                   },
-                ),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-            ],
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(
+                      height: 25,
+                    );
+                  },
+                );
+              },
+            ),
           ),
-        ),
+          const SizedBox(
+            height: 50,
+          ),
+        ],
       ),
     );
   }
@@ -174,6 +197,7 @@ class _AddProductCardState extends State<AddProductCard> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => ProductDiscription(
+                  id: widget.id,
                   img: widget.img,
                   category: widget.category,
                   discription: widget.discription,
@@ -225,10 +249,11 @@ class _AddProductCardState extends State<AddProductCard> {
                         ),
                         TextButton(
                           onPressed: () async {
-                            await FirebaseFirestore.instance
-                                .collection('Products')
-                                .doc(widget.id)
-                                .delete();
+                            _showMyDialog(context: context);
+                            // await FirebaseFirestore.instance
+                            //     .collection('Products')
+                            //     .doc(widget.id)
+                            //     .delete();
                           },
                           child: const Text(
                             'Remove',
@@ -244,6 +269,38 @@ class _AddProductCardState extends State<AddProductCard> {
           ),
         ),
       ],
+    );
+  }
+
+  Future<void> _showMyDialog({context}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: const SingleChildScrollView(
+            child: Text('Are sure you want to delete'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () async {
+                await FirebaseFirestore.instance
+                    .collection('Products')
+                    .doc(widget.id)
+                    .delete();
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

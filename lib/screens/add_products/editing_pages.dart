@@ -29,8 +29,9 @@ class ImageEditScreen extends StatelessWidget {
                 ),
                 child: GestureDetector(
                   onTap: () {
-                    BlocProvider.of<AddProductBloc>(context)
-                        .add(AddImageEvent());
+                    BlocProvider.of<AddProductBloc>(context).add(
+                      AddImageEvent(),
+                    );
                   },
                   child: BlocBuilder<AddProductBloc, AddProductState>(
                     builder: (context, state) {
@@ -59,7 +60,7 @@ class ImageEditScreen extends StatelessWidget {
               onPressed: () async {
                 final imgUrl =
                     await uploadImageToFirebase(imageFile: pickedImageFile!);
-                FirebaseFirestore.instance
+                await FirebaseFirestore.instance
                     .collection('Products')
                     .doc(id)
                     .update({
@@ -78,9 +79,9 @@ class ImageEditScreen extends StatelessWidget {
                   const Size(350, 60),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'Upload new image',
-                style: const TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 20),
               ),
             ),
           ],
@@ -117,8 +118,11 @@ class ProductNameEditScreen extends StatelessWidget {
             change: _nameControllor.text,
             id: id,
             name: 'Update new name',
-            voidCallback: () {
-              FirebaseFirestore.instance.collection('Products').doc(id).update({
+            voidCallback: () async {
+              await FirebaseFirestore.instance
+                  .collection('Products')
+                  .doc(id)
+                  .update({
                 'name': _nameControllor.text.trim(),
               });
             },
@@ -129,7 +133,7 @@ class ProductNameEditScreen extends StatelessWidget {
   }
 }
 
-/*================Price====================== */
+/*=================================================Price============================================== */
 class PriceEditScreen extends StatelessWidget {
   PriceEditScreen({super.key, required this.id});
   final _priceControllor = TextEditingController();
@@ -153,13 +157,15 @@ class PriceEditScreen extends StatelessWidget {
           ),
           CommonButtonTwo(
               name: 'Update new price',
-              voidCallback: () {
-                FirebaseFirestore.instance
+              voidCallback: () async {
+                await FirebaseFirestore.instance
                     .collection('Products')
                     .doc(id)
-                    .update({
-                  'price': _priceControllor.text.trim(),
-                });
+                    .update(
+                  {
+                    'price': _priceControllor.text.trim(),
+                  },
+                );
               })
         ],
       ),
@@ -167,7 +173,7 @@ class PriceEditScreen extends StatelessWidget {
   }
 }
 
-/*================Quantity====================== */
+/*===========================================Quantity======================================== */
 class QuantityEditScreen extends StatelessWidget {
   QuantityEditScreen({super.key, required this.id});
   final _quantityControllor = TextEditingController();
@@ -190,26 +196,29 @@ class QuantityEditScreen extends StatelessWidget {
                 nameControllor: _quantityControllor),
           ),
           CommonButtonTwo(
-              name: 'Update new quantity',
-              voidCallback: () {
-                FirebaseFirestore.instance
-                    .collection('Products')
-                    .doc(id)
-                    .update({
+            name: 'Update new quantity',
+            voidCallback: () async {
+              await FirebaseFirestore.instance
+                  .collection('Products')
+                  .doc(id)
+                  .update(
+                {
                   'quantity': _quantityControllor.text.trim(),
-                });
-              })
+                },
+              );
+            },
+          )
         ],
       ),
     );
   }
 }
 
-/*===================Category=================== */
+/*====================================================Category========================================== */
 enum PlantsCategory { indoor, outdoor }
 
 class CategoryEditScreen extends StatefulWidget {
-  CategoryEditScreen({super.key, required this.id});
+  const CategoryEditScreen({super.key, required this.id});
   final String id;
 
   @override
@@ -223,7 +232,7 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Category'),
+        title: const Text('Select Category'),
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
@@ -235,9 +244,11 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
               value: PlantsCategory.indoor,
               groupValue: _character,
               onChanged: (PlantsCategory? value) {
-                setState(() {
-                  _character = value;
-                });
+                setState(
+                  () {
+                    _character = value;
+                  },
+                );
               },
             ),
           ),
@@ -247,24 +258,26 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
               value: PlantsCategory.outdoor,
               groupValue: _character,
               onChanged: (PlantsCategory? value) {
-                setState(() {
-                  _character = value;
-                });
+                setState(
+                  () {
+                    _character = value;
+                  },
+                );
               },
             ),
           ),
           CommonButtonTwo(
             name: 'Save',
-            voidCallback: () {
+            voidCallback: () async {
               if (_character == PlantsCategory.indoor) {
-                FirebaseFirestore.instance
+                await FirebaseFirestore.instance
                     .collection('Products')
                     .doc(widget.id)
                     .update({
                   'category': 'Indoor',
                 });
               } else {
-                FirebaseFirestore.instance
+                await FirebaseFirestore.instance
                     .collection('Products')
                     .doc(widget.id)
                     .update(
@@ -281,7 +294,7 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
   }
 }
 
-/*===================Discription=================== */
+/*============================================Discription============================================ */
 class DescriptionEditScreen extends StatelessWidget {
   DescriptionEditScreen({super.key, required this.id});
   final _discriptionControllor = TextEditingController();
@@ -298,7 +311,7 @@ class DescriptionEditScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: CommonTextFields(
-              inputType: TextInputType.number,
+              inputType: TextInputType.text,
               labelText: 'Description',
               validator: 'Please Enter Product discription',
               nameControllor: _discriptionControllor,
@@ -306,13 +319,15 @@ class DescriptionEditScreen extends StatelessWidget {
           ),
           CommonButtonTwo(
               name: 'Update new Discription',
-              voidCallback: () {
-                FirebaseFirestore.instance
+              voidCallback: () async {
+                await FirebaseFirestore.instance
                     .collection('Products')
                     .doc(id)
-                    .update({
-                  'description': _discriptionControllor.text.trim(),
-                });
+                    .update(
+                  {
+                    'description': _discriptionControllor.text.trim(),
+                  },
+                );
               })
         ],
       ),
