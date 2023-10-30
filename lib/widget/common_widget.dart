@@ -99,7 +99,7 @@ class CommonTextFields extends StatelessWidget {
       controller: _nameControllor,
       decoration: InputDecoration(
         labelText: labelText,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {

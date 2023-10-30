@@ -103,9 +103,9 @@ class _ProductBodyState extends State<ProductBody> {
                     child: Text('No Products'),
                   );
                 }
-                print(
-                  '--------------------${data.length}',
-                );
+                // print(
+                //   '--------------------${data.length}',
+                // );
 
                 return ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
@@ -189,6 +189,7 @@ class AddProductCard extends StatefulWidget {
 class _AddProductCardState extends State<AddProductCard> {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -211,10 +212,10 @@ class _AddProductCardState extends State<AddProductCard> {
             elevation: 5,
             child: Column(
               children: [
-                Container(
-                  height: 250,
+                SizedBox(
+                  height: size.height / 3,
                   width: 340,
-                  decoration: const BoxDecoration(color: Colors.amber),
+                  // decoration: const BoxDecoration(color: Colors.amber),
                   child: Image.network(
                     widget.img,
                     fit: BoxFit.cover,
@@ -316,7 +317,7 @@ Future<List<ProductClass>> fetchProducts() async {
       },
     ).toList();
   } catch (e) {
-    print("Error fetching products: $e");
+    // print("Error fetching products: $e");
     return [];
   }
 }

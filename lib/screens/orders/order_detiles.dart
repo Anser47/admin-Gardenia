@@ -27,8 +27,8 @@ class _OrderDetilesState extends State<OrderDetiles> {
                 color: Colors.white,
                 width: double.infinity,
                 height: size.height / 14,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0, left: 8),
+                child: const Padding(
+                  padding: EdgeInsets.only(top: 20.0, left: 8),
                   child: Text(
                     'Order Id : OND049U57797582',
                     style: TextStyle(
@@ -46,12 +46,12 @@ class _OrderDetilesState extends State<OrderDetiles> {
                 height: size.height / 5,
                 child: Center(
                   child: ListTile(
-                    title: Text('Snake Plant'),
-                    subtitle: Text('Customer: customer@gmail.com'),
-                    trailing: Container(
+                    title: const Text('Snake Plant'),
+                    subtitle: const Text('Customer: customer@gmail.com'),
+                    trailing: SizedBox(
                       width: 60,
                       height: 60,
-                      child: Image.network(''),
+                      child: Image.asset('lib/assets/2.png'),
                     ),
                   ),
                 ),

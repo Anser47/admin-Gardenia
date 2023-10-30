@@ -20,7 +20,7 @@ class OrdersScreen extends StatelessWidget {
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black),
+          iconTheme: const IconThemeData(color: Colors.black),
         ),
         body: Container(
           decoration: const BoxDecoration(gradient: gcolor),
@@ -32,7 +32,7 @@ class OrdersScreen extends StatelessWidget {
                 name: 'All orders',
                 nav: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AllOrderScreen(),
+                    builder: (context) => const AllOrderScreen(),
                   ));
                 },
               ),
@@ -42,7 +42,7 @@ class OrdersScreen extends StatelessWidget {
                 name: 'Completed Orders',
                 nav: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CompletedOrders(),
+                    builder: (context) => const CompletedOrders(),
                   ));
                 },
               ),
@@ -52,7 +52,7 @@ class OrdersScreen extends StatelessWidget {
                 name: 'Pending Orders',
                 nav: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => PendingOrders(),
+                    builder: (context) => const PendingOrders(),
                   ));
                 },
               ),
@@ -62,7 +62,7 @@ class OrdersScreen extends StatelessWidget {
                 name: 'Canceled Orders',
                 nav: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CanceledOrders(),
+                    builder: (context) => const CanceledOrders(),
                   ));
                 },
               )
@@ -100,7 +100,8 @@ class OrderCards extends StatelessWidget {
             child: Center(
               child: Text(
                 name,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
           ),

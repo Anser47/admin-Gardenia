@@ -27,18 +27,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: StreamBuilder(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SplashScreen();
-              }
-              if (snapshot.hasData) {
-                return HomeScreen();
-              }
-              return const ScreenLogin();
-            }),
-        // home: AddProductScreen(),
+        home: SplashScreen(),
       ),
     );
   }

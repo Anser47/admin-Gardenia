@@ -200,7 +200,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           product: productModel,
                         ),
                       );
-                      print('triggerd');
+                      // print('triggerd');
                       if (!context.mounted) {
                         return;
                       }

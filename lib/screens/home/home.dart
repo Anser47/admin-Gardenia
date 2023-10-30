@@ -3,7 +3,9 @@ import 'package:admin_gardenia/screens/add_products/added_products.dart';
 import 'package:admin_gardenia/screens/auth/auth.dart';
 import 'package:admin_gardenia/screens/earnings/earnings.dart';
 import 'package:admin_gardenia/screens/orders/orders.dart';
+import 'package:admin_gardenia/screens/paymentmethord/payment_methords.dart';
 import 'package:admin_gardenia/screens/total_stocks.dart/total_stocks.dart';
+import 'package:admin_gardenia/screens/users/users_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -11,15 +13,27 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
   final List<Widget> _screens = [
     ScreenAddedProducts(),
-    const ScreenEarnings(),
+    ScreenEarnings(),
     const ScreenStocks(),
     OrdersScreen(),
+    const PaymentMethordsScreen(),
+    const UsersScreen(),
+  ];
+  final List<IconData> _screenIcons = [
+    Icons.shopping_cart_outlined,
+    Icons.money,
+    Icons.shop,
+    Icons.card_giftcard,
+    Icons.attach_money,
+    Icons.person
   ];
   final List<String> _screenName = [
     'Add product',
     'Earnings',
-    'Avilable Stocks',
-    'Orders'
+    'Stocks',
+    'Orders',
+    'Payment Methords',
+    'User Screen'
   ];
   @override
   Widget build(BuildContext context) {
@@ -32,58 +46,69 @@ class HomeScreen extends StatelessWidget {
             style: TextStyle(
                 fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
           ),
+          centerTitle: true,
           actions: [
             IconButton(
               onPressed: () {},
-              icon: const Icon(Icons.settings),
+              icon: const Icon(
+                Icons.settings,
+                color: Colors.white,
+              ),
             ),
             IconButton(
               onPressed: () {
                 firebase.signOut();
               },
-              icon: const Icon(Icons.logout_sharp),
+              icon: const Icon(
+                Icons.logout_sharp,
+                color: Colors.white,
+              ),
             ),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 80,
-              ),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final crossAxisCount = constraints.maxWidth > 600 ? 3 : 2;
-                  const cardWidth = 200.0;
-                  const cardHeight = 150.0;
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 40,
+                ),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final crossAxisCount = constraints.maxWidth > 600 ? 3 : 2;
+                    const cardWidth = 200.0;
+                    const cardHeight = 200.0;
 
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    itemCount: 4,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: cardWidth / cardHeight,
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 10.0,
-                      mainAxisSpacing: 10.0,
-                    ),
-                    itemBuilder: (context, index) {
-                      return AdminCard(
-                        cardWidth: cardWidth,
-                        cardHeight: cardHeight,
-                        name: _screenName[index],
-                        navigator: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => _screens[index]),
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
-              ),
-            ],
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      itemCount: 4,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        childAspectRatio: cardWidth / cardHeight,
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: 10.0,
+                        mainAxisSpacing: 10.0,
+                      ),
+                      itemBuilder: (context, index) {
+                        return AdminCard(
+                          icon: _screenIcons[index],
+                          cardWidth: cardWidth,
+                          cardHeight: cardHeight,
+                          name: _screenName[index],
+                          navigator: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => _screens[index],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -97,11 +122,13 @@ class AdminCard extends StatelessWidget {
       required this.cardWidth,
       required this.cardHeight,
       required this.navigator,
-      required this.name});
+      required this.name,
+      required this.icon});
   VoidCallback navigator;
   final double cardWidth;
   final double cardHeight;
   final String name;
+  final IconData icon;
   @override
   Widget build(BuildContext context) {
     getData();
@@ -111,11 +138,23 @@ class AdminCard extends StatelessWidget {
         child: Container(
           width: cardWidth,
           height: cardHeight,
-          decoration: const BoxDecoration(gradient: gcolor),
+          decoration: BoxDecoration(
+            gradient: gcolor,
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Center(
-            child: Text(
-              name,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  size: 60,
+                ),
+                Text(
+                  name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
           ),
         ),

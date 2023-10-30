@@ -23,7 +23,7 @@ class CompletedOrders extends StatelessWidget {
                 size: size,
                 nav: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => OrderDetiles(),
+                    builder: (context) => const OrderDetiles(),
                   ));
                 },
               ),
