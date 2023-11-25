@@ -1,14 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-// getData() async {
-//   QuerySnapshot data =
-//       await FirebaseFirestore.instance.collection('user').get();
-//   print(
-//     data,
-//   );
-// }
-
 Future<void> getData() async {
   try {
     QuerySnapshot querySnapshot =
