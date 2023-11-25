@@ -4,7 +4,7 @@ import 'package:admin_gardenia/view/auth/auth.dart';
 import 'package:admin_gardenia/view/earnings/earnings.dart';
 import 'package:admin_gardenia/view/orders/screens/orders.dart';
 import 'package:admin_gardenia/view/paymentmethord/payment_methords.dart';
-import 'package:admin_gardenia/view/settings/settings.dart';
+import 'package:admin_gardenia/view/settings/screens/settings.dart';
 import 'package:admin_gardenia/view/total_stocks.dart/total_stocks.dart';
 import 'package:admin_gardenia/view/users/users_screen.dart';
 import 'package:flutter/material.dart';
