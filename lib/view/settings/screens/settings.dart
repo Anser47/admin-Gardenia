@@ -49,21 +49,10 @@ class ProfileBody extends StatelessWidget {
                       Radius.circular(25),
                     ),
                   ),
-                  height: 310,
+                  height: 240,
                   width: 350,
                   child: Column(
                     children: [
-                      AccountTile(
-                        icon: Icons.directions_bike,
-                        name: 'Address',
-                        voidCallback: () {
-                          // Navigator.of(context).push(
-                          //   MaterialPageRoute(
-                          //     builder: (context) => ScreenAddress(),
-                          //   ),
-                          // );
-                        },
-                      ),
                       AccountTile(
                         icon: Icons.privacy_tip,
                         name: 'Privacy and Policy',
