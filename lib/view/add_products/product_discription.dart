@@ -12,7 +12,7 @@ class ProductDiscription extends StatefulWidget {
       required this.img,
       required this.id});
   final String name;
-  final String price;
+  final int price;
   final String category;
   final String discription;
   final String img;
@@ -28,7 +28,7 @@ class _ProductDiscriptionState extends State<ProductDiscription> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 1, 52, 3),
+          backgroundColor: Colors.white,
           title: const Text('Product discription'),
         ),
         body: Discription(
@@ -56,7 +56,7 @@ class Discription extends StatelessWidget {
 
   final String img;
   final String name;
-  final String price;
+  final int price;
   final String category;
   final String discription;
   final String id;

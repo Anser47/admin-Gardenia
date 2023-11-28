@@ -22,9 +22,10 @@ class MyApp extends StatelessWidget {
           create: (context) => AddProductBloc(),
         ),
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),
+        // home: EarningsScreen(),
       ),
     );
   }

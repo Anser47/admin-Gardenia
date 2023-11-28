@@ -1,21 +1,19 @@
-import 'package:admin_gardenia/view/home/home.dart';
-import 'package:admin_gardenia/widget/common_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ScreenStocks extends StatelessWidget {
-  const ScreenStocks({super.key});
+  const ScreenStocks({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           bottom: const TabBar(
             tabs: [
               Tab(
-                text: 'Avilable',
+                text: 'Available',
                 icon: Icon(Icons.event_available),
               ),
               Tab(
@@ -26,84 +24,128 @@ class ScreenStocks extends StatelessWidget {
           ),
           title: const Text('Stocks'),
         ),
-        body: TabBarView(children: [
-          Container(
-            decoration: const BoxDecoration(gradient: gcolor),
-            child: Column(
-              children: [
-                kHeight20,
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Card(
-                    elevation: 6,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      height: size.height / 5,
-                      width: double.infinity,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: Image.network(
-                                'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.6IeEzE8WjRisNJks_ytv-AHaJO%26pid%3DApi&f=1&ipt=41acb58a3b29bc0977c9f208e79bd3319dd0788e2b8f14f1917f68b5d6fbfed4&ipo=images',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16.0),
-                          // Product Details
-                          const Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Product Name',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 8.0),
-                                  child: Text(
-                                    'Price: ₹99',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    Text('Quantity : '),
-                                    Text(' 3'),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+        body: const TabBarView(
+          children: [
+            StockList(filter: 'available'),
+            StockList(filter: 'stockOut'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class StockList extends StatelessWidget {
+  final String filter;
+
+  const StockList({super.key, required this.filter});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('Products').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        List<DocumentSnapshot> documents = snapshot.data!.docs;
+
+        // Filter the documents based on the quantity string and the provided filter
+        List<DocumentSnapshot> filteredDocuments = documents.where((doc) {
+          String quantity = doc['quantity'].toString();
+          if (filter == 'available') {
+            return quantity != '0';
+          } else if (filter == 'stockOut') {
+            return quantity == '0';
+          }
+          return false;
+        }).toList();
+
+        return ListView.builder(
+          itemCount: filteredDocuments.length,
+          itemBuilder: (context, index) {
+            return StockItem(doc: filteredDocuments[index]);
+          },
+        );
+      },
+    );
+  }
+}
+
+class StockItem extends StatelessWidget {
+  final DocumentSnapshot doc;
+
+  const StockItem({super.key, required this.doc});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Card(
+        elevation: 6,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          height: 150, // Adjust the height as needed
+          width: double.infinity,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 12.0),
+                child: SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: Image.network(
+                    doc['imageUrl'], // Change this to your field name
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              // Product Details
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      doc['name'], // Change this to your field name
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                )
-              ],
-            ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        'Price: ₹${doc['price']}', // Change this to your field name
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        const Text('Quantity: '),
+                        Text(
+                          doc['quantity'].toString(),
+                        ), // Change this to your field name
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          Container(
-            color: Colors.white,
-            child: const Center(
-              child: Text('Empty'),
-            ),
-          ),
-        ]),
+        ),
       ),
     );
   }

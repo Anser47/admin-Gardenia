@@ -1,8 +1,8 @@
 class ProductClass {
   String? name;
   String? searchName;
-  String? price;
-  String? quantity;
+  int? price;
+  int? quantity;
   String? description;
   String? category;
   String? imageUrl;
@@ -19,8 +19,8 @@ class ProductClass {
 
   ProductClass.fromJson(Map<String, dynamic> json) {
     name = json['name'];
-    price = json['price'];
-    quantity = json['quantity'];
+    price = json['price'] ?? 0;
+    quantity = json['quantity'] ?? 0;
     description = json['description'];
     category = json['category'];
     imageUrl = json['imageUrl'];

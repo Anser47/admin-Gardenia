@@ -35,7 +35,7 @@ class OrderDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            kHeight40, Image.asset('assets/icons/icon.jpeg'),
+            kHeight40,
             Row(
               children: [
                 Padding(
@@ -88,7 +88,7 @@ class OrderDetailsScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 10.0),
                   child: Container(
-                    color: Colors.amber,
+                    color: const Color.fromARGB(255, 234, 233, 228),
                     width: size.width / 4,
                     height: size.height / 9,
                     child: Image.network(

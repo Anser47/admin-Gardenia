@@ -1,4 +1,3 @@
-import 'package:admin_gardenia/sample.dart';
 import 'package:admin_gardenia/view/add_products/added_products.dart';
 import 'package:admin_gardenia/view/auth/auth.dart';
 import 'package:admin_gardenia/view/earnings/earnings.dart';
@@ -137,7 +136,6 @@ class AdminCard extends StatelessWidget {
   final IconData icon;
   @override
   Widget build(BuildContext context) {
-    getData();
     return GestureDetector(
       onTap: navigator,
       child: Card(
