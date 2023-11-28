@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 const kHeight20 = SizedBox(
   height: 20,
 );
+const kHeight30 = SizedBox(
+  height: 20,
+);
+const kHeight40 = SizedBox(
+  height: 20,
+);
 
 class CommonButton extends StatelessWidget {
   CommonButton({
@@ -99,7 +105,7 @@ class CommonTextFields extends StatelessWidget {
       controller: _nameControllor,
       decoration: InputDecoration(
         labelText: labelText,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {

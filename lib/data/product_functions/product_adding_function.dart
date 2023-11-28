@@ -36,11 +36,25 @@ Future<void> addProductToFirebase({
         'category': product.category,
         'imageUrl': imgUrl,
         'id': product.id,
+        'searchName': product.searchName,
       },
     );
-  } on FirebaseFirestore catch (error) {
-    showSnackbar(context!, "Failed To Add Product: $error");
-    print("============Fail to add Product: $error");
+  } on FirebaseException catch (error) {
+    String errorMessage = 'An error occurred while adding the product.';
+
+    if (error.code == 'permission-denied') {
+      errorMessage =
+          'Permission denied. You do not have the necessary permissions.';
+    } else if (error.code == 'not-found') {
+      errorMessage = 'The requested document was not found.';
+    }
+
+    showSnackbar(context!, errorMessage);
+    print("Failed to add product: $error");
+  } catch (error) {
+    // Handle generic exceptions, e.g., network issues
+    showSnackbar(context!, 'An unexpected error occurred. Please try again.');
+    print("Failed to add product: $error");
   }
 }
 

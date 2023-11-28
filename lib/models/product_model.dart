@@ -1,7 +1,8 @@
 class ProductClass {
   String? name;
-  String? price;
-  String? quantity;
+  String? searchName;
+  int? price;
+  int? quantity;
   String? description;
   String? category;
   String? imageUrl;
@@ -13,16 +14,18 @@ class ProductClass {
       this.description,
       this.category,
       this.imageUrl,
-      this.id});
+      this.id,
+      this.searchName});
 
   ProductClass.fromJson(Map<String, dynamic> json) {
     name = json['name'];
-    price = json['price'];
-    quantity = json['quantity'];
+    price = json['price'] ?? 0;
+    quantity = json['quantity'] ?? 0;
     description = json['description'];
     category = json['category'];
     imageUrl = json['imageUrl'];
     id = json['id'];
+    searchName = json['searchName'];
   }
 
   Map<String, dynamic> toJson() {
@@ -34,6 +37,7 @@ class ProductClass {
     data['category'] = category;
     data['imageUrl'] = imageUrl;
     data['id'] = id;
+    data['searchName'] = searchName;
     return data;
   }
 }
