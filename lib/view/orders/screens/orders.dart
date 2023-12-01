@@ -7,7 +7,7 @@ import 'package:admin_gardenia/widget/common_widget.dart';
 import 'package:flutter/material.dart';
 
 class OrdersScreen extends StatelessWidget {
-  OrdersScreen({super.key});
+  const OrdersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

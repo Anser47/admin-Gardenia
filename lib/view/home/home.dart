@@ -1,11 +1,13 @@
-import 'package:admin_gardenia/view/add_products/added_products.dart';
+import 'package:admin_gardenia/view/add_products/screen/added_products.dart';
 import 'package:admin_gardenia/view/auth/auth.dart';
 import 'package:admin_gardenia/view/earnings/earnings.dart';
+import 'package:admin_gardenia/view/home/widget/home_card.dart';
 import 'package:admin_gardenia/view/orders/screens/orders.dart';
 import 'package:admin_gardenia/view/paymentmethord/payment_methords.dart';
 import 'package:admin_gardenia/view/settings/screens/settings.dart';
 import 'package:admin_gardenia/view/total_stocks.dart/total_stocks.dart';
 import 'package:admin_gardenia/view/users/users_screen.dart';
+import 'package:admin_gardenia/widget/common_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -14,7 +16,7 @@ class HomeScreen extends StatelessWidget {
     const ScreenAddedProducts(),
     const ScreenEarnings(),
     const ScreenStocks(),
-    OrdersScreen(),
+    const OrdersScreen(),
     const PaymentMethordsScreen(),
     const UsersScreen(),
   ];
@@ -51,7 +53,7 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => ScreenSettings(),
+                    builder: (context) => const ScreenSettings(),
                   ),
                 );
               },
@@ -76,6 +78,7 @@ class HomeScreen extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Column(
               children: [
+                kHeight40,
                 const SizedBox(
                   height: 40,
                 ),
@@ -111,52 +114,6 @@ class HomeScreen extends StatelessWidget {
                       },
                     );
                   },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class AdminCard extends StatelessWidget {
-  AdminCard(
-      {super.key,
-      required this.cardWidth,
-      required this.cardHeight,
-      required this.navigator,
-      required this.name,
-      required this.icon});
-  VoidCallback navigator;
-  final double cardWidth;
-  final double cardHeight;
-  final String name;
-  final IconData icon;
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: navigator,
-      child: Card(
-        child: Container(
-          width: cardWidth,
-          height: cardHeight,
-          decoration: BoxDecoration(
-            gradient: gcolor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  icon,
-                  size: 60,
-                ),
-                Text(
-                  name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),

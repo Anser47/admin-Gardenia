@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:admin_gardenia/data/product_functions/image_picker.dart';
 import 'package:admin_gardenia/data/product_functions/product_adding_function.dart';
 import 'package:admin_gardenia/models/product_model.dart';
-import 'package:admin_gardenia/view/add_products/added_products.dart';
+import 'package:admin_gardenia/view/add_products/screen/added_products.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

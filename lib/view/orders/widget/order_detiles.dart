@@ -99,15 +99,6 @@ class OrderDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            // Row(
-            //   children: [
-            //     TextButton(
-            //       onPressed: () {},
-            //       child: const Text('Cancel'),
-            //     ),
-            //     TextButton(onPressed: () {}, child: const Text('Return'))
-            //   ],
-            // ),
             kHeight20,
             Center(
               child: Column(
@@ -201,12 +192,15 @@ class OrderDetailsScreen extends StatelessWidget {
                               ),
                             ],
                             content: const Text(
-                                'Are you sure you wanna change order status  to Shipped'),
+                              'Are you sure you wanna change order status  to Shipped',
+                            ),
                           );
                         },
                       );
                     },
-                    child: const Text('Product Delivered'),
+                    child: const Text(
+                      'Product Delivered',
+                    ),
                   ),
                 ],
               ),

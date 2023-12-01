@@ -114,10 +114,10 @@ class _ScreenLoginState extends State<ScreenLogin> {
             ),
             ElevatedButton(
               onPressed: _submit,
-              child: Text(_isLogin ? 'Log in' : 'Sign up'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
               ),
+              child: Text(_isLogin ? 'Log in' : 'Sign up'),
             ),
             if (!_isAuthenticating)
               TextButton(

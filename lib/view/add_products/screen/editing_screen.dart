@@ -1,11 +1,10 @@
 import 'dart:io';
-
-import 'package:admin_gardenia/view/add_products/editing_pages.dart';
+import 'package:admin_gardenia/view/add_products/screen/editing_pages.dart';
 import 'package:admin_gardenia/widget/common_widget.dart';
 import 'package:flutter/material.dart';
 
 class ScreenEditing extends StatefulWidget {
-  ScreenEditing({super.key, required this.id});
+  const ScreenEditing({super.key, required this.id});
   final String id;
   @override
   State<ScreenEditing> createState() => _ScreenEditingState();
