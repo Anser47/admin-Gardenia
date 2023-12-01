@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
   final List<Widget> _screens = [
     const ScreenAddedProducts(),
-    const ScreenEarnings(),
+    ScreenEarnings(),
     const ScreenStocks(),
     const OrdersScreen(),
     const PaymentMethordsScreen(),

@@ -1,18 +1,13 @@
+import 'package:admin_gardenia/view/home/home.dart';
 import 'package:admin_gardenia/widget/common_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-enum EarningsType { last30days, last60days, selectaRange }
-
-class ScreenEarnings extends StatefulWidget {
-  const ScreenEarnings({super.key});
-
-  @override
-  State<ScreenEarnings> createState() => _ScreenEarningsState();
-}
-
-class _ScreenEarningsState extends State<ScreenEarnings> {
-  EarningsType _change = EarningsType.last30days;
-
+class ScreenEarnings extends StatelessWidget {
+  ScreenEarnings({Key? key}) : super(key: key);
+  CollectionReference earningsreference =
+      FirebaseFirestore.instance.collection('Order');
+  // EarningsType _change = EarningsType.last30days;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -26,72 +21,124 @@ class _ScreenEarningsState extends State<ScreenEarnings> {
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
-      body: Column(
-        children: [
-          kHeight20,
-          Center(
+      body: StreamBuilder(
+        stream: earningsreference.snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Text('Error:----------- ${snapshot.error}');
+          }
+          List<QueryDocumentSnapshot<Object?>> data = [];
+          if (snapshot.data == null) {
+            return const Center(
+              child: Text('No orders'),
+            );
+          }
+          data = snapshot.data!.docs;
+          double totalSum = data.fold(
+            0.0,
+            (previousValue, element) =>
+                previousValue + double.parse(element['totalPrice'].toString()),
+          );
+          if (snapshot.data!.docs.isEmpty || data.isEmpty) {
+            return const Center(
+              child: Text('Empty'),
+            );
+          }
+          return SingleChildScrollView(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
+                kHeight30,
+                Center(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.black,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     width: double.infinity,
                     height: size.height / 7,
-                    child: const Center(
-                      child: Text(
-                        'Total: \$4092',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            'Total: ₹${totalSum.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Total product you have sold ${data.length}',
+                            style: const TextStyle(fontSize: 15),
+                          )
+                        ],
                       ),
                     ),
                   ),
                 ),
-                ListTile(
-                  leading: Radio<EarningsType>(
-                    groupValue: _change,
-                    value: EarningsType.last30days,
-                    onChanged: (EarningsType? value) {
-                      setState(() {
-                        _change = value!;
-                      });
-                    },
-                  ),
-                  title: const Text('Last 30 days'),
+                Text(
+                  'All Products',
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.bold),
                 ),
-                ListTile(
-                  leading: Radio<EarningsType>(
-                    groupValue: _change,
-                    value: EarningsType.last60days,
-                    onChanged: (EarningsType? value) {
-                      setState(() {
-                        _change = value!;
-                      });
-                    },
-                  ),
-                  title: const Text('Last 60 days'),
+                ListView.separated(
+                  physics: const ScrollPhysics(),
+                  shrinkWrap: true,
+                  separatorBuilder: (context, a) {
+                    return kHeight20;
+                  },
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 4,
+                      margin: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          gradient: gcolor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12),
+                          ),
+                        ),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(16.0),
+                          leading: Container(
+                            width: 70.0,
+                            height: 100.0,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(data[index]['imageUrl']),
+                              ),
+                            ),
+                          ),
+                          title: Text(
+                            data[index]['productName'],
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 8.0),
+                              Text('Date: ${data[index]['date']}'),
+                              Text('Price: ₹${data[index]['totalPrice']}'),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
-                ListTile(
-                  leading: Radio<EarningsType>(
-                    groupValue: _change,
-                    value: EarningsType.selectaRange,
-                    onChanged: (EarningsType? value) {
-                      setState(() {
-                        _change = value!;
-                      });
-                    },
-                  ),
-                  title: const Text('Select a range'),
-                ),
+                kHeight40,
+                kHeight40
               ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
