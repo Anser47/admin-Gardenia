@@ -183,17 +183,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_form.currentState!.validate()) {
-                      int parsedPrice =
-                          int.tryParse(_priceControllor.text.trim()) ?? 0;
-                      int parsedquantity =
-                          int.tryParse(_quantityControllor.text.trim()) ?? 0;
+                      // int parsedPrice =
+                      //     int.tryParse(_priceControllor.text.trim()) ?? 0;
+                      // int parsedquantity =
+                      //     int.tryParse(_quantityControllor.text.trim()) ?? 0;
                       _form.currentState!.save();
                       final productModel = ProductClass(
                         description: _discriptionControllor.text.trim(),
                         category: dropdownValue,
-                        price: parsedPrice,
+                        price: _priceControllor.text.trim(),
                         name: _nameControllor.text.trim(),
-                        quantity: parsedquantity,
+                        quantity: _quantityControllor.text.trim(),
                         id: uniqueFileName,
                         searchName: _nameControllor.text.toLowerCase().trim(),
                       );

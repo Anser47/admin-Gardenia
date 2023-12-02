@@ -54,7 +54,7 @@ class _AddProductCardState extends State<AddProductCard> {
                   category: widget.category,
                   discription: widget.discription,
                   name: widget.name,
-                  price: parsedPrice,
+                  price: widget.price,
                 ),
               ),
             );

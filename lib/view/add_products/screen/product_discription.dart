@@ -12,7 +12,7 @@ class ProductDiscription extends StatefulWidget {
       required this.img,
       required this.id});
   final String name;
-  final int price;
+  final String price;
   final String category;
   final String discription;
   final String img;
@@ -56,7 +56,7 @@ class Discription extends StatelessWidget {
 
   final String img;
   final String name;
-  final int price;
+  final String price;
   final String category;
   final String discription;
   final String id;
